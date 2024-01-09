@@ -1,0 +1,2131 @@
+\documentclass[16pt]{report}
+\input{preamble.tex}
+\usepackage[scr]{rsfso}
+\usepackage{algorithmic}
+
+\title{\Huge{Structure Discrète}\\{IFT1065}\\{\textbf{Algorithmes}}\\{\textbf{Graphes et arbres}}\\ 
+{\textbf{Relations}}\\{\textbf{Fonctions}}\\{\textbf{Cardinalité des ensembles}}}
+\author{\huge{Franz Girardin}}
+\date{10 Décembre 2023}
+\lstset{inputencoding=utf8/latin1}
+
+\usepackage{calligra}            %%%%%%%%%%%%%%%%%  Sect.                          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{helvet}
+\titleformat{\chapter}
+  {\fontfamily{phv}\bfseries\Large} % format
+  {}                % label
+  {0pt}             % sep
+  {\color{myb}\Large}           % before-code
+
+
+
+\titleformat{\section}
+  {\Large\calligra\scshape}{\thesection}{1em}{}
+
+
+% Customizing the spacing for the chapter titles
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+\usepackage{mathpazo}
+\begin{document}
+\maketitle
+\pagebreak
+\tableofcontents 
+\pagebreak
+
+\pagebreak
+\begin{multicols*}{2}
+    \newcommand{\sectionsymbol}{\textrm{\textnormal{${}^\S$}}}
+    \chapter{Récursion et algorithmes pt. 1}
+            
+    \section{Type de données récursif \texttt{\small{\S Lehman et al 7.1}}}
+            \paragraph{} 
+            Les \textit{types de données récursifs} sont spécifiés par des \textbf{définitions récursives} ; 
+            ces définitions indiquent comment construire des éléments de données à partir d'éléments de données 
+            précédents. À chaque type de données récursif est associé :
+            \begin{enumerate}
+                \item Des définitions de \textbf{propriétés} ou \textbf{fonctions} 
+                \item Des méthode d'\textbf{induction structurelle} pour prouver que toutes les données du type 
+                    indiqué ont une certain \textit{\textcolor{red}{propriété}}. 
+            \end{enumerate}
+
+            \paragraph{} 
+            Chaque définition récursive d'un type de données a deux partie : \textbf{Le(s) cas de base} qui spécifie 
+            que certains \textit{éléments mathématiques connus} sont dans le type de données ; 
+            \textbf{Le(s) constructeur(s)} qui spécifie comment construire de nouveaux 
+            \textit{éléments de données} à partir des éléments de base.     
+
+            \begin{Definitionx}{Definition récursive d'une \textit{\textcolor{red}{chaîne de caractères}}}{}
+                    Soit un \textbf{ensemble non nul} appelé un \textit{alphabet}, dont ses éléments        
+                    sont des \textit{caractères} (ou \textit{letttres}, \textit{symboles}, \textit{chiffres}), 
+                    le \textbf{type de données récursif} $A^*$ dépendant de l'alphabet $A$ est définit comme suit : 
+
+                    \begin{itemize}
+                        \item \textbf{Cas de base} : la chaîne de caractère vide, $\lambda$ est dans $A^*$. 
+                        \item \textbf{Cas constructeur} : Si \textcolor{red}{$a \in A$} et 
+                            \textcolor{red}{$s \in A^*$}, alors la paire $\langle{a, s}\rangle \in A^*$     
+                    \end{itemize} 
+            \end{Definitionx}    
+
+            \paragraph{}
+                Cette définition décrit toutes les \textit{chaînes de caractères} possibles se trouvant dans $A^*$ en se 
+                servant de l'alphabet $A$. La définition indique que si un élément se trouve dans l'alphabet et 
+                qu'une chaîne de caractère $s$ se trouve dans l'ensemble $A^*$ basé sur l'alphabet $A$, alors, 
+                il existe une autre chaîne de caractère dans $A^*$ telle que la chaîne $s$ est concaténée à 
+                l'élément $a$; donc, une autre chaîne $s^{\prime}$ commençant par $a$ et finissant par $s$ existe 
+                également dans $A^*$. 
+
+            \paragraph{}
+                Ainsi, la chaîne de caractère $1011$ peut être obtenue récursivement en commençant par la chaîne 
+                vide $\lambda \in A^*$ : 
+                \[ \langle 1, \langle 0, \langle 1, \langle 1, \lambda \rangle\rangle\rangle\rangle \]
+
+
+            \begin{Definitionx}{Définition récursive de la longueur d'une chaîne de caractère}{}
+                La longueur $|s|$ d'une chaîne de caractère $s$, est définit récursivement comme suit :
+                        \begin{itemize}
+                            \item \textbf{Cas de base} : $|\lambda| \Coloneqq 0$
+                            \item Cas constructeur : $|\langle a, s \rangle| \Coloneqq 1 + |s|$ 
+                        \end{itemize}
+            \end{Definitionx}
+
+
+            \begin{Definitionx}{Concaténation}{}
+                La \textit{concaténation} $s\cdot t$ des chaînes de caractères $s$, $t \in A^*$ est définit 
+                récursivement comme suit : 
+                \begin{enumerate}
+                    \item \textbf{Cas de base} : 
+                                        \[ \lambda \cdot t \Coloneqq t \] 
+                    \item \textbf{Cas constructeur} :  
+                                        \[ \langle a, s \rangle \cdot t \Coloneqq \langle a, s \cdot t\rangle \]   
+                \end{enumerate}
+
+            \end{Definitionx}       
+
+
+\begin{EExample}{}{}
+Considérons deux chaînes de caractères binaires $s = 01$ et $t = 11$. En utilisant la notation récursive, nous avons:
+\[
+s = \langle 0, \langle 1, \lambda \rangle \rangle \quad \text{et} \quad t = \langle 1, \langle 1, \lambda \rangle \rangle
+\]
+
+Pour concaténer $s$ et $t$ en utilisant la définition récursive, nous procédons comme suit:
+
+1. Nous commençons avec la chaîne $s$ et appliquons la règle du cas constructeur :
+\[
+s \cdot t = \langle 0, \langle 1, \lambda \rangle \rangle \cdot \langle 1, \langle 1, \lambda \rangle \rangle
+\]
+
+2. Nous appliquons ensuite la définition de la concaténation récursive :
+\[
+\langle a, s' \rangle \cdot t = \langle a, s' \cdot t \rangle
+\]
+
+3. En suivant cette règle, nous concaténons le reste de la chaîne $s$ (qui est $\langle 1, \lambda \rangle$) avec $t$ :
+\[
+\langle 0, (\langle 1, \lambda \rangle \cdot t) \rangle
+\]
+
+4. En utilisant le cas de base pour la concaténation ($\lambda \cdot t = t$), nous avons :
+\[
+\langle 1, \lambda \rangle \cdot t = \langle 1, t \rangle
+\]
+
+5. En remplaçant $t$ par sa valeur, nous obtenons :
+\[
+\langle 1, t \rangle = \langle 1, \langle 1, \langle 1, \lambda \rangle \rangle \rangle
+\]
+
+6. En combinant tout, la représentation récursive de la chaîne concaténée $s \cdot t$ est :
+\[
+\langle 0, \langle 1, \langle 1, \langle 1, \lambda \rangle \rangle \rangle \rangle
+\]
+
+Ce qui correspond à la chaîne "0111" en notation standard.
+\end{EExample}
+
+
+    \section{Induction Structurelle \texttt{\small{\S Lehman et al. 7.1.1}}}
+    L'induction structurelle est une méthode qui permet de prouver que tous les éléments d'un type de données 
+    récursif ont une certaine \textit{propriété}. Une preuve d'induction structurelle a \textbf{deux parties} : 
+
+    \begin{itemize}
+        \item Prouver que chaque élément du cas de base \textit{possède la propriété}  
+        \item Prouver que chaque élément du cas constructeur possède la propriété, lorsque 
+            le constructeur est appliqué sur les éléments qui possèdent la propriété. 
+    \end{itemize}           
+
+
+    \begin{Lemme}{L'identité de droite de $\lambda$}{}
+                     \[ \forall s \in A^*, s \cdot \lambda = s \]  
+    \end{Lemme}
+
+    \begin{Preuve}{}{}
+        Soit l'affirmation 
+        \[ P(s) \Coloneqq \left[ s \cdot \lambda = s \right] \]
+        
+        \textbf{Cas de base} : $( s = \lambda)$  
+        Nous montrons ici que la \textit{propriété} $s \cdot \lambda = s$ est vraie \textbf{pour tous les éléments}
+        appartenant $s$ appartenant à $A^*$. 
+        
+        \begin{align*}
+                        s \cdot \lambda &= \lambda \cdot \lambda \\ 
+                              &= \lambda \\
+                              &= s
+        \end{align*}
+
+        \textbf{Cas constructeur} : ($s = \langle a, t\rangle$). Nous montrons ici que la 
+        \textit{propriété} $s \cdot \lambda = s$ est vraie \textbf{pour tous les éléments}   $s \in A^*$, lorsque 
+        le constructeur est apliqué sur les éléments $s \in A^*$. 
+
+        \begin{align*}
+                        s \cdot \lambda &= \langle a,t \rangle \lambda  \\
+                              & \Coloneqq \langle a, t \cdot \lambda \rangle \\ 
+                              &= \langle a, t \rangle \\
+                              &= s 
+        \end{align*}
+    \end{Preuve}
+    
+    \columnbreak
+    \begin{Theorem}{Principe d'induction structurelle}{}
+        Soit $P$ un prédicat sur un type de données définit récursivement $R$. \textbf{Si} :
+        \begin{itemize}
+            \item $P(b)$ est vrai pour chaque cas de base $b \in R$, et 
+            \item Pour tout constructeur à deux argument \textbf{c}, 
+                \[ \left[ P(r) \text{ ET } P(s) \text{ IMPLIQUE }  P(c(r,s)) \right] \]
+            pour tout $r, s \in R$, \\ 
+            et pareillement pour tout constructeur prenant un autre nombre d'arguments,     
+        \end{itemize}
+        \textbf{alors}, 
+                        \[P(r) \text{ est vrai pour tout } r \in R \]
+        
+    \end{Theorem}            
+    
+    \section{Définir les naturels récursivement \texttt{\small{Lehman et al. \S 7.3}}}
+
+
+    \begin{Definitionx}{Entier naturel}{}
+        L'ensemble des \textbf{entiers naturels} $\mathbb{N}$ est l'ensemble définit récursivement comme étant :
+                \begin{itemize}
+                    \item $ 0 \in \mathbb{N}$ 
+                    \item \textbf{Si} $n \in \mathbb{N}$, \textbf{alors} le \textit{successeur} 
+                        \textcolor{red}{$n + 1$} de $n$ est dans $\mathbb{N}$. 
+                \end{itemize}
+    \end{Definitionx}
+
+
+    \begin{Definitionx}{Factoriel}{}
+        Le factoriel d'un nombre $n \in \mathbb{N}$ est définit récursivement comme étant :
+                \begin{itemize}
+                    \item $ fact(0) \Coloneqq 1 $ 
+                    \item $fact(n+1) \Coloneqq (n+1) \dots  fact(n)$ pour $n \geq 0$. 
+                \end{itemize}
+    \end{Definitionx}
+    
+    \section{Induction Mathématique \texttt{\small{\S Hammack 14.1}}}
+    
+    \textbf{L'induction mathématique} vise à montrer qu'un prédicat $S(n)$ est vrai pour tout 
+    $n \in D \subseteq \mathbb{N}$. Il faut d'abord montrer qu'un \textbf{cas de base} 
+    \textcolor{red}{$S_1$} est vrai. Dans \textbf{l'étape d'induction}, il faut montrer que le fait que $S_k$ 
+    soit vrai force $S_{k+1}$ à être vrai. Mathématiquement : 
+                        \[ S_k \implies S_{k+1} \]
+            \begin{center}
+                \textbf{Grand lines d'une preuve par induction} 
+            \noindent\fbox{%
+                \parbox{0.75\linewidth}{%
+                    \textbf{Proposition} : \\
+                    Les propositions $S_1, S_2, S_3, S_4 \dots$ sont toutes vraies \\\\
+                    \vspace{0.5em} % Add some vertical space
+                    \noindent \textit{Preuve.} (Induction)\\ 
+                    (1) Prouver que $S_1$ est vrai \\
+                    (2) Prouver que pour tout entier $k \geq 1$, $S_k \implies S_{k+1}$ est vrai. 
+                    
+                                   
+                    \hspace{1em} \(\vdots\) % Vertical dots
+
+                    \vspace{0.5em} % Add some vertical space
+                    \noindent Il s'ensuit que, \textit{par induction mathématique}, $S_n$ est vrai. 
+                    \qed 
+                }%
+        \    }
+            \end{center}
+
+            \section{Induction Mathématique forte \texttt{\small{\S Hammack 14.3}}}
+    \textbf{L'induction mathématique forte} vise à montrer qu'un prédicat $S(n)$ est vrai pour tout 
+    $n \in D \subseteq \mathbb{N}$. Il faut d'abord montrer qu'un ou plusieurs \textbf{cas de bases} 
+    \textcolor{red}{$S_1, S_2, \dots S_r$} sont vrais. Dans l'étape d'induction, il faut assumer que les prédicats 
+    $S_m$ sont vrais pour tous $1 \leq m \leq k$, pour \textbf{prouver que} $S(k+1)$ est vrai.   
+
+            \begin{center}
+                \textbf{Grand lines d'une preuve par induction forte} 
+            \noindent\fbox{%
+                \parbox{0.75\linewidth}{%
+                    \textbf{Proposition} : \\
+                    Les propositions $S_1, S_2, S_3, S_n \dots$ sont toutes vraies \\\\
+                    \vspace{0.5em} % Add some vertical space
+                    \noindent \textit{Preuve.} (Induction)\\ 
+                    (1) Prouver que $S_1, S_2, \dots  S_r$ (les prédicats de base) sont vrais \\\\ 
+                    (2.1) Assumer que les prédicats $S_m$ sont vrais pour $1 \leq m \leq k$ \\
+                    (2.2) Prouver que pour tout entier $k \geq 1$, $S_k \implies S_{k+1}$ est vrai. 
+                    
+                                   
+                    \hspace{1em} \(\vdots\) % Vertical dots
+
+                    \vspace{0.5em} % Add some vertical space
+                    \noindent Il s'ensuit que, \textit{par induction mathématique \textbf{forte}}, $S_n$ est vrai. 
+                    \qed 
+                }%
+        \    }
+            \end{center}
+
+
+            \begin{Theorem}{Suite}{}
+                Soit $a_1 = 1, a_2 = 3, a_k = a_{k-2} + 2a_{k-1}$. Il est vrai que $a_k$ sera toujours 
+                impair.
+            \end{Theorem}
+
+            \begin{Preuve}{}{}
+                Soit $S_n \Coloneqq$ \textit{il est vrai que \; $a_n$ est \textbf{impair}}.   
+                Nous devons montrer que $\forall n \in \{3, 4,  5 \dots  \} , S_n$.  \\ 
+                \underline{\textbf{Cas de base}} \\  
+                Montrons d'abord que $S_1$ et $S_2$ sont vrais. Trivialement, $S_1 = 2$ et $S_2 =3$ sont 
+                impairs. \\
+                \underline{\textbf{Hérédité}} \\
+                Supposons que les prédicats $S_m$ sont vrais où $2 \leq m \leq k$.
+                Alors nous avons :
+                \begin{align*}
+                    a_{k+1} &= a_{k-1} + 2a_{k} \\ 
+                         &= a_{k-1} + 2(2c + 1), c \in \mathbb{N} \\ 
+                         &= a_{k-1} + 4c + 2 \\ 
+                         &= a_{k-1} + 2(c+1)
+                \end{align*}
+                Nous savons que $a_{k-1}$ est impair, 
+                \textcolor{myb}{\textit{par l'hypothèse inductive que nous avons posé}  }   
+                et nous savons également que $2(c+1)$ est un nombre pair. Nous savons également 
+                que la somme de deux nombre de parité opposé engendre un nombre impair (Lemme).
+                Par \textit{induction mathématique forte}, il s'ensuit que $a_{k+1}$ est impair. $\qed$ 
+            \end{Preuve}        
+
+            \begin{Theorem}{Postage de timbre}{}
+                N'imporete quel postage de $8$ cents ou plus est possible en utilisant des timbes de 
+                $3$ cents et des timbres de $5$ cents. 
+            \end{Theorem}
+
+            \begin{Preuve}{}{}
+                Soit $S_n \Coloneqq$ \textit{Il est vrai qu'un postage de n cents est possible en utilisant 
+                des timbres de 3 cents et des timbres de 5 cents}. \\
+                Nous devons montrer que $\forall n \in \{8, 9, 10, \dots , S_n$ \}. 
+                \underline{\textbf{Case de base}} \vspace{1em}\\ 
+                Montrons d'abord que $S_8, S_9$ et $S_{10}$ sont vrais. Trivialement, 
+                \begin{align*}
+                        &S_8 : \text{ On peut utiliser 1 timbre de 5 cents et 1 timbre de 3 cents} \\ 
+                        &S_9 : \text{ On peut utiliser 0 timbre de 5 cents et 3 timbre de 3 cents} \\
+                        &S_{10} : \text{ On peut utiliser 2 timbre de 5 cents et 0 timbre de 3 cents} \\
+                \end{align*}
+                \underline{\textbf{Hypothèse inductive}} \vspace{1em} \\
+                Soit $k \geq 10$, Supposons que $S_m$ est vrai, pour tout $m$ : $8 \leq m \leq k$. Par 
+                l'hypothèse inductive, $S_{k-2}$ est vrai.  
+                Pour faire un postage de $k+1$ cents
+
+                nous pouvons utiliser un postage de 
+                $k-2$ cents et ajouter $1$ timbre de $3$ cents: on obtient un postage de 
+                $(k-2) + 3 = k+1$ cents en utliisant des timbre de $3$ et $5$ cents. \qed  
+            \end{Preuve}
+
+            \begin{Theoremcon}{}
+                On voudrait montrer que la proposition :
+                \[ \textcolor{red}{\forall n \in \mathbb{N} fact-rec(n) = n!} \]
+            \end{Theoremcon}
+            \begin{Preuve}{}{}
+                Comme on veut prouver la correction d'un algorithme récursif, on 
+                fait une preuve par induction. \\ 
+                \textit{Preuve}. \\ \vspace{1em}  
+
+                \textbf{Cas de base} \\ 
+                Par définition, $fact-rec(0) = 1$. Et nous savons que $0! = 1$ \\ \vspace{2em} 
+                \textbf{Hérédité}  
+                \[ \forall n \in \mathbb{N}, fac-rec(n) = n! \implies fac-rec(n+1) = (n+1)! \]
+            \\ \vspace{2em}
+            \textit{Preuve directe}
+            Soit $n \in \mathbb{N}$, supposong que $fac-rec(n) = n!$. Puisque $n+1 \neq 0$,  
+            \begin{align*}
+                fact-rec(n+1) &= (n+1) \times fact-rect(n+1-1) \\ 
+                        &= (n+1) \times n! \\ 
+                        &= (n+1)!
+            \end{align*}
+            \end{Preuve}
+            \section{Extraction d'algorithmes à partir de preuves} 
+        
+
+
+            \begin{Theoremcon}{}
+                Toute entier naturel $n \geq 8$ peut s'écrire sous la forme de : 
+                \[ n = 5x +3y \; | \; x, y \in \mathbb{N}\]
+                Autrement dit, $P(n)$ : 
+                \[ \forall n \in {8, 9, \dots}, \exists x, y, \in \mathbb{N}, n = 5x +3y \]
+            \end{Theoremcon}
+
+
+            \begin{Preuve}{}{}
+                Par induction mathématique forte. \\ 
+                \textbf{Cas de base} \\         
+                Pour montrer $P(n+1)$ on utilise $P(n-2)$. Donc, si on montre seulement
+                le cas de base $P(8)$, on ne peut pas déduire $P(9)$ ni $P(10)$. Il faut donc montrer deux autres 
+                cas de base. \\ 
+
+                \textbf{Cas de base $P(8)$}  \\
+                \begin{align*}
+                            &P(8) = 8 =  3 \times 1 + 5 \times 1 \\ 
+                            &P(9) = 9 = 3 \times 3 + 5 \times 0  \\ 
+                            &P(10) = 10 = 3 \times 0 + 5 \times 2  \\
+                \end{align*}
+
+                \textbf{Hérédité} 
+                \[ \forall n \geq 8, (\forall k \in \mathbb{N}, 8 \leq k \leq n 
+                \implies P(n)) \implies P(n+1) \]
+                Soit $n \geq 8$ et supposons P(1) pour tous les 
+                $k \in \{8, 9, \dots\}$ : 
+                \begin{align*}
+                    n+1 &= (n-2) + 3 \\ 
+                            &= 5x + 3y +3 \\ 
+                            &= 5x +3(y+1) \\
+                \end{align*}
+            \end{Preuve}
+
+
+            Pour faire une preuve d'existance non constructive, on peut procéder en 
+            faisant une preuve par l'absurde. Autrement dit : 
+            
+            \begin{align*}
+                \text{Supposons } \forall x \in D, \neg P(x) 
+            \end{align*}
+            Nous arrivons ensuite à une contradiction, ce qui montre que notre 
+            proposition originale,  
+                            \[ \exists x \in D, P(x) \]
+            est \textbf{vraie}.   
+        
+
+            \begin{note}{}{}
+                Toutes les preuves d'existence \textbf{contructives} cachent un 
+                algorithme. 
+            \end{note}
+
+            \begin{EExample}{}{}
+                \textbf{Entrée} : $n \geq 8$ \\ 
+                \textbf{Sortie} : $(x, y) \in \mathbb{N} \times \mathbb{N}$ tant que 
+                $n = 5x + 3y$ 
+                Decomp $5 -3(n)$. À compléter. 
+                1
+            \end{EExample}
+
+    \chapter{Algorithmes}
+
+    \section{Variables et Algorithmes \texttt{\small{\S Hammack 6.1}  }}
+
+                \begin{Definitionx}{Algorithme}{}
+                    Un algorithme est \textit{une séquence d'instructions} 
+                    qui permettent d'engendrer un résultat désiré (\textbf{sortie}) à partir d'éléments de départ 
+                    (\textbf{entrée}). 
+                \end{Definitionx}
+
+                \begin{Definitionx}{Variable}{}
+                    Une \textbf{variable} est un \textit{symbol} auquel on peut assigner diverse \textbf{valeurs}. 
+                    Lorsque nécessaire, on utilise les indices pour distinguer les variables :
+                    $\{x_1, x_2, \dots , x_n \}$.  
+                    \vspace{1em}\\ 
+                    Dans les language de programmation, une variable est représente un \textit{endroit}
+                    dans la mémoire de l'ordinateur qui peut posséder plusieurs valeurs, selon le moment. 
+                    Par contre, à un temps donné, une variable \textbf{ne possède qu'une valeur}. 
+                \end{Definitionx}
+                \columnbreak
+
+                \section{Assignation et Égalité \texttt{\small{\S Hammack 6.1}}}
+                \begin{EExample}{}{}
+                    Il est possible de générer une commande telle que la valeur $7$, par exemple, \textbf{est assignée} 
+                    à la variable $x$. Dans ce cas, on utilise la syntaxe suivante. 
+                    \[ x \coloneqq 7\]
+                \end{EExample}  
+
+                \begin{Concept}{Assignation et Égalité}{}
+                    Il faut savoir différencier une \textit{assignation} d'une \textit{égalité}. Si un algorithme 
+                    effectue l'assignation $x \coloneqq 7$ et que, plus tard dans l'algorithme apparaît 
+                    la commande $x = 7$, le programme évaluera la véracité de la phrase $x = 7$. 
+                    Cette phrase peut être soit \textbf{vraie} ou soit \textbf{fausse}, dépendamment de 
+                    la valeur de $x$. 
+                \end{Concept}
+
+            \section{Boucles et Notation d'Algorithmes \texttt{\small{\S Hammack 6.2}}}
+                \paragraph{}
+                Les boucles sont des \textit{séquences de commandes répétées} un certain nombre de fois. 
+
+                \begin{Definitionx}{Boucle \texttt{while}}{}
+                    Il s'agit d'une séquence de commandes s'exécutant \textbf{tant qu'} une 
+                    certaine \textit{condition}
+                    est respectée. 
+                \end{Definitionx}
+
+
+                \begin{algorithm}[H]
+                    \caption{Simple boucle \texttt{while}}\label{alg:two}
+                    \While{P(x)} {
+                        Commande 1\; 
+                        Commande 2\;
+                        \vdots
+                        Commande $n$ \;
+                    }
+                \end{algorithm}
+                \noindent
+                La boucle \texttt{while} exécute la séquence de $n - 1$ commandes qu'elle contient 
+                pendant plusieurs \textit{itérations}, jusqu'à ce que $P(x)$ soit \textbf{faux}.    
+
+            \begin{Definitionx}{Boucle \texttt{for}}{}
+               Il s'agit d'une séquence de commande s'exécutant tant qu'une 
+               \textit{condition définit par un intervalle précis} est respectée.   
+            \end{Definitionx}
+                \begin{algorithm}[H]
+                    \caption{Simple boucle \texttt{while}}\label{alg:two2}
+                    \For{ $i \coloneqq m $ \textbf{to} $n$}    {
+                        Commande 1\; 
+                        Commande 2\;
+                        \vdots
+                        Commande $n$ \;
+                    }
+                \end{algorithm}
+        \section{Opérateurs Logiques dans les Algorithmes \texttt{\small{\S Hammack 6.3}}}
+        \paragraph{}
+        Il y a une relation étroite entre les algorithmes et la logique. Chaque boucle 
+        d'un algorithme est excutée à condition qu'une proposition $P(x)$ soit vraie. 
+        Or, cette proposition peut contenir plusieurs variables jointes par des opérateurs logiques. 
+        \begin{Definitionx}{Condition \texttt{if}}{}
+            L'algorithme exécute les commande dans le corps de la condition \texttt{if} si celle-ci est respecté. 
+            
+            \begin{algorithm}[H]
+                        \If{P(x)} {
+                            Commande 1\; 
+                            Commande 2\;
+                            \vdots
+                            Commande $n$ \;
+                        }
+            \end{algorithm}
+        \end{Definitionx}
+
+        \begin{Definitionx}{\texttt{if-else}}{}
+            Une variante de du conditionnel \texttt{if} est le conditionnel \texttt{if-else}
+
+        \end{Definitionx}
+            \begin{algorithm}[H]
+                \SetAlgoLined
+                \DontPrintSemicolon
+                        \eIf{P(x)} {
+                            Commande\; 
+                            Commande\;
+                        \vdots}
+                            {Commande\;
+                            \vdots\;
+                            }
+            \end{algorithm}
+
+            \columnbreak
+
+            \begin{EExample}{Algorithme générant $n!$}{}
+                    \begin{algorithm}[H]
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Un entier non nul $n$}
+                        \Output{$n!$}
+                        \SetAlgoLined 
+                        \DontPrintSemicolon
+                        \eIf{$n = 0$} {
+                            return 1  \textcolor{myb}{\dotfill parce que $0! = 1$}  
+                        }
+                        {
+                            $y\coloneqq 1$\;
+                            \For {$i \coloneqq 1$ \textbf{to}  $n$ } {
+                                $y \coloneqq y \cdot i$\;
+                            }
+                            \textbf{output} $y$ \textcolor{myb}{\dotfill parce que $y = n!$}
+                        }
+                    \end{algorithm}   
+        \end{EExample}
+        
+
+
+        \begin{EExample}{Trouve le plus grand membre d'une liste}{}
+            \begin{algorithm}[H]
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Une liste $X = (x_1, x_2, \dots, x_n)$}
+                        \Output{La plus grande entrée de la liste}
+                        \SetAlgoLined 
+                        \DontPrintSemicolon
+                        \textit{\texttt{plusGrand}} $\coloneqq  x_i$ \; 
+                        \For {$i \coloneqq 2$ \textbf{to} $i = n-1$} {
+                            \If {\texttt{plusGrand }$ < x_i$} {
+                                \textit{\texttt{plusGrand}} $\coloneqq i$\; 
+                            }
+                        }  
+                        \textbf{output} \texttt{plusGrand}    
+            \end{algorithm}
+        \end{EExample}
+
+        Imaginons que nous voulons trier la liste de longeur 5 suivante $(5, 4, 3, 2, 1)$ en ordre 
+        croissant. En partant tu \textbf{premier terme} ($i = 1$), nous \textbf{comparons} le premier terme 
+        au terme suivant ($i = 2$). Si le terme est plus grand que le terme suivant, on les interchange. 
+        On obtient alors une nouvelle liste $(4, 5, 3, 2, 1 )$. On continue avec le prochain terme 
+        $(i = 2)$ Si ce terme est plus grand que son successeur, on les interchange. On poursuit cette manipulation
+        jusqu'au dernier terme et obtient alors la liste $(4, 3, 2, 1, 5)$. Ce processus est effectué 
+        pour un total de $n - 1$ fois. On peut généraliser cette approche pour une liste de longueur $n$ 
+
+
+        \begin{algorithm}[H]
+                        \caption{(Bubble sort)\label{alg:three}}
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Une liste $X = (x_1, x_2, \dots, x_n )$}
+                        \Output{Cette même liste triée ordre cro/ééissant}
+                        \SetAlgoLined
+                        \DontPrintSemicolon
+                        $j \coloneqq$ \textit{\texttt{longeurDeLaListe}} \; 
+                        $i \coloneqq$ \textit{\texttt{longeurDeLaListe}} \;                       
+                        \For {$j \coloneqq 1$ \textbf{to} $n - 1$} {
+                            \For {$i \coloneqq 1$ \textbf{to} $j \coloneqq n -1$  } {
+                                \If {$x_{i+1} < x_i$} {
+                                    \texttt{temporaire} $\coloneqq x_i$ \; 
+                                    $x_i \coloneqq x_{i+1}$ \; 
+                                    $x_{i+1} \coloneqq$ \texttt{temporaire}\;
+                                }
+                            }
+                        }
+                        \textbf{output} $X$ \;
+        \end{algorithm}
+
+        \section{L'algorithme de division \texttt{\small{\S Hammack 6.4}}}
+        \begin{Theorem}{ Algorithme de Division}{}
+            \begin{align*}
+                \forall a \in \mathbb{Z}, \exists b > 0, q, r : a = qb + r, 0 \leq r < b
+            \end{align*}
+        \end{Theorem}
+        L'algorithme de division indique que pour tout entier, il existe un entier positif $b$ qui divise 
+        $a$ tel que $a$ est la somme $qb$ addotionné au reste de la division, $r$. Pour implémenter cet 
+        algorithme, il suffit de constater que $b$ divise $a$ $q$ fois. Autrement dit, soustraire $b$ de $a$
+        au plus, $q$ fois. À la ($q+1$)-\textit{ième} fois, on obtient l'entier non nul
+        $r$, soit le reste. 
+
+
+        \begin{algorithm}[H]
+                        \caption{(Algorithme de Division)\label{alg:three2}}
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Des nombre $a \geq 0$ et $b > 0$}
+                        \Output{Des entier $q$ et $r$ pour lesquels $a = qb +r$}
+                        \SetAlgoLined
+                        \DontPrintSemicolon
+                        $q \coloneqq 0$ \;
+                        \While { $ a > b$ } {
+                            $a \coloneqq a - b$ \;
+                            $q \coloneqq q + 1$ \;
+                        }
+                        $r \coloneqq a$ \; 
+                        \textbf{output} $q$ \; 
+                        \textbf{output} $r$ \;  
+
+        \end{algorithm}
+        
+        \section{Procédures et Récursion \texttt{\small{\S Hammack 6.5}}}
+        Lorsqu'on écrit un algorithme, la répétition de code est à éviter. Pour éviter les répétions, 
+        on peut gérérer une \textbf{procédure} jouant le rôle de mini-algorithme; cette procédure peut 
+        ensuite être appalée et réutilisée plusieurs fois. Ainsi, pour générer un algorithme qui 
+        calcule $C(n, k)$ on peut d'abord écrire une procédure pour obtenir $n!$. On applerait cette procédure 
+        \texttt{Fac($n$)}. 
+
+        \begin{algorithm}[H]
+            \caption{Procédure \texttt{Fac($n$)} \label{alg:four}}
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Un nombre $n$}
+                        \Output{$n!$}
+                        \SetAlgoLined
+                        \DontPrintSemicolon
+                        \eIf {$n = 0$} {
+                            retourne $1$ \; 
+                        }
+                        {
+                            $y \coloneqq 1$ \; 
+                            \For {$i \coloneqq 1$ \textbf{to} $i \coloneqq n $}   {
+                                $y \coloneqq y \cdot i$ \;
+                            }
+                            retourne $y$
+
+                        }
+        \end{algorithm}
+ 
+        \begin{algorithm}[H]
+            \caption{Algorithme pour calculer \texttt{$C(n, k)$} \label{alg:five}}
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Deux entier $n$ et $k$ avec $ \geq 0$ }
+                        \Output{$n!$}
+                        \SetAlgoLined
+                        \DontPrintSemicolon
+                        \eIf { $(k < 0) \lor (k > n)$ } {
+                            \textbf{output } $0$ \; 
+                        }
+                            {\textbf{output} $\dfrac{\texttt{Fac}(n)}{\texttt{Fac}(k)\cdot\texttt{Fac}(n-k)}$}
+                        
+
+        \end{algorithm}
+        \begin{Definitionx}{Procédure récursive}{}
+            Nous savons qu'une procédure est un ensemble d'instruction accomplissant une tâche. 
+            Nous savons aussi qu'un algorithme peut appeler une ou plusieurs procédures. 
+            Une \textbf{procédure récursive} est un algorithme procédural qui s'appelle lui-même.   
+        \end{Definitionx}
+
+        \begin{algorithm}[H]
+            \caption{Procédure récurisve \texttt{RFac($n$)} \label{alg:four2}}
+                        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+                        \Input{Un nombre $n$}
+                        \Output{$n!$}
+                        \SetAlgoLined
+                        \DontPrintSemicolon
+                        \eIf {$n = 0$} {
+                            retourne $1$ \; 
+                        }
+                            { 
+                                retourne $n \cdot \texttt{Rfac}(n-1)$
+                            }
+        \end{algorithm}
+        \section{Prouver qu'un algorithme est vrai \texttt{\small{\S Hammack 6.5}}}
+            Lorsqu'on génère une \textit{procédure récusrive}, il est possible il est possible de prouver qu'un 
+            algorithme est valide en utilisant l'induction. 
+
+            \begin{prop}{Validité de \texttt{RFac}($n$)}{}
+                Si $n$ est un entier non nul, \textbf{alors} \texttt{RFac}($n$) retourne la valeur exacte 
+                de, soit $n!$. 
+            \end{prop}
+
+            \begin{Preuve}{}{}
+                Nous devons prouver lorsqu'on fournit un entier non nul $n$ à la procédure \texttt{RFac}($n$), 
+                la procédure retourn la valeur $n!$. Nous allons procéder par \textit{induction mathématique}.  
+                \vspace{1em}\\
+                \underline{\textbf{Cas de base}}
+                \vspace{1em}\\
+                Lorsque $n = 0$, $\texttt{RFac}(n)$ retourne $1$ et nous savons que $0! = 1$. Donc, 
+                l'algorithme retourne la valeur appropriée pour le cas de base. 
+                \vspace{1em}\\ 
+                \underline{\textbf{Hypothèse inductive}} 
+                \vspace{1em}\\ 
+                Supposons que si $n$ est un entier non nul, \texttt{RFac}($n$) engendre la valeur $n!$. 
+                \vspace{1em}\\
+                Nous devons prouver que si l'hypothèse est vraie, \texttt{RFac}($n + 1$) engendre 
+                la valeur $(n+1)!$. Nous allons procéder par preuve directe. 
+                Selon la procédure \texttt{RFac}($n$) : 
+
+                \begin{align*}
+                        \texttt{RFac}(n + 1) &= (n + 1)\texttt{RFac}((n + 1) - 1) \\
+                                      &= n \texttt{RFac}(n) + 1 \cdot \texttt{RFac}(n) \\ 
+                                      &= (n+1)\texttt{RFac}(n)
+                                      &= (n+1)n! 
+                \end{align*}
+
+                L'hypothèse d'induction suggère que $\texttt{RFac}(n) = n!$, et donc 
+                $(n+1)\texttt{RFac}(n) = (n+1)n!$. L'algorithme retourne la valeur correcte de $(n+1)!$
+                \vspace{1em}\\
+                Il s'ensuit, par induction que $\texttt{RFac}(n)$ retorune la valeur valide de $n!$ pour tout 
+                $n \geq 0$. 
+            \end{Preuve}
+
+    \chapter{Graphes et arbres}
+     Un graphe est un système de \textbf{noeud}, \textit{nodes} interconnectés. Les graphes peuvent être 
+     conceptualisés comme étant un ensemble de noeuds liés par \textit{des lignes connectant noeuds}.   
+
+        \section{Graphes et sous-graphes \texttt{\small{\S Hammack 15.1}}}
+            Le \textbf{noeud} d'un graph est appelé sommet, \textit{vertex} \textbf{en anglais}.  
+            Les graphes sont généralement dénotés par des lettre majuscules $G$ ou $H$. Pour spécifier un graphe 
+            $G$, il faut décrire ses \textit{sommets} et ses \textit{arrêtes} 
+            ($\coloneqq $  edges \textbf{en anglais}).  
+            \begin{Definitionx}{Un graphe}{}
+                Un \textbf{graphe} $G$ est un ensemble finit $V(G)$ d'objets appelés \textbf{sommets} ainsi que 
+                d'un ensemble $E(G)$ composés de sous-ensembles à deux éléments de $V(G)$ appelés \textbf{arrêtes}.
+                N'importe quelle arrête $\{x, y\} \in E(G)$ est abbréviée $xy$ ou $yx$. 
+            \end{Definitionx}
+            \pagebreak
+            Certains graphes sont si courant qu'on réserve des \textbf{symboles spéciaux pour eux}. C'est le cas 
+            des \textbf{graphes} $P_n$ et $C_n$.   
+            \begin{Definitionx}{}{}
+                Un \textbf{chemin} $P_n$ est le graphe ayant $n$ sommets : $\{v_1, v_2, \dots, v_n \}$. 
+                Le graphe possède les arrêtes arrêtes 
+                $E(P_n) = \{v_1v_2, v_2v_3, v_3v_4, \dots, v_{n-1}v_n \}$.  
+            \end{Definitionx}
+
+            \begin{Definitionx}{Cycle}{}
+                Un \textbf{cycle} $C_n$ est le graphes ayant $n$ sommet $\{v_1, v_2, \dots, v_n\}$ et possédant 
+                les arrêtes $E(C_n) = $
+                $\{\textcolor{red}{v_1}v_2, v_2v_3, v_3v_4, \dots, v_{n-1}v_n, v_n \textcolor{red}{v_1}\}$
+            \end{Definitionx}
+            
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{PathsAndCycles.png}
+                \end{center}
+                \caption{Chemins $P_n$ et cycles $C_n$}
+            \end{figure}
+            Un chemin ou un cycle est dit \textbf{pair} s'il possède un \textbf{nombre pair de sommets}. 
+            Autrement, il est dit \textbf{impair}. 
+            \begin{Definitionx}{}{}
+                Un \textbf{graphe complet} $K_n$ est le graphe ayant $n$ sommets et le nombre nécessaire 
+                d'arrêtes pour joindre toutes les paires de sommets. Le \textbf{nombre d'arrêtes} 
+                d'un graphe compelt $K_n$ est donné par l'équation: 
+                \begin{align*}
+                        |E(K_n)| = {n \choose 2} = \frac{n(n-1)}{2}
+                \end{align*}
+                qui correspond au nombre de façons de choisir deux points à partir de $n$ \textbf{sommets}  
+            \end{Definitionx}
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{GraphesComplets.png}
+                \end{center}
+                \caption{Graphes complets}
+            \end{figure}
+
+
+            \begin{Definitionx}{Graphes complet bipartis}{}
+                Pour deux \textbf{entier positifs} $m$ et $n$, le \textbf{graphe complet bipartis} $K_{m,n}$ 
+                est le graphe dont l'ensemble de sommets $V(K_{m,n}) = X \cup Y$ est l'union de 
+                deux \textbf{ensembles disjoints} $X$ et $Y$ de taille $m$ et $n$, respectivement,  
+                et tels que $E(K_{m,n}) = \{xy:x \in X, y \in Y\}$. 
+            \end{Definitionx}
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{GraphesBiipartis.png}
+                \end{center}
+                \caption{Graphes Complets Bipartis}
+            \end{figure}
+            Dans un graphe complet bipartis, \textbf{chacun des sommet} $v \in X$ est connecté à un 
+            sommet à \textbf{chacun des sommets} $v \in Y$. 
+            Les graphes complets bipartis sont un cas spécial des \textbf{graphes bipartis}
+            \begin{Definitionx}{Graphe bipartis}{}
+                Un \textbf{graphe bipartis} est un graphe tel qu'il est possible de trouver une \textbf{partition}
+                $V(G) = X \cup Y$ de $V(G)$ correspondant à deux ensembles disjoints, tel que 
+                chaque arrête $G$ a un point dans $X$ et un point dans $Y$. 
+             \end{Definitionx}
+             Dans un graphe \textbf{bipartis incomplet}, chaque sommet $v \in X$ peut être connecté 
+             à un ou plusieurs sommets $v \in Y$. Par contre, il n'est pas vrai que 
+             tous les sommets $v \in X$ sont connecté à tous les sommets $v \in Y$. 
+
+             Pour les graphes bipartis complet ou incomplet, un sommet $v \in X$ n'est jamais connecté 
+             à un autre sommet $v \in X$ ; les graphes qui on une arrête $E(G)$ connectant deux points 
+             appartenant à $X$ ou deux points appartenant à $Y$ \textcolor{red}{ne sont pas bipartis}.   
+
+             \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{GraphesBi.png}
+                \end{center}
+                \caption{Graphe bipartis incomplet}
+             \end{figure}
+
+
+             Par conséquent, les \textbf{cycles ayant un nombre impair de sommets} ne sont pas bipartis, 
+             puisqu'il n'est pas possible de diviser l'ensemble des sommet en deux ensembles disjoints; 
+             il y aura toujours au moins un sommet $v_1 \in X$ connecté à un autre sommet $v_2 \in X$ ou un sommet
+             $v_1 \in Y$ connecté à un autre sommet $v_2 \in Y$. 
+
+             \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{cyclesBipartis.png}
+                \end{center}
+                \caption{Cycles bipartis pair et cycle non bipartis impairs}
+             \end{figure}
+
+             \begin{Definitionx}{Sous-graphe}{}
+                 Un \textbf{graphe} $H$ est dit être un \textbf{sous-graphe} de $G$ si 
+                 $V(H) \subset V(G)$ et $E(H) \subset E(G)$. Autrement dit, l'ensemble 
+                 des \textbf{sommets} de $H$ est composée d'un certain nombre de sommets de $G$ 
+                 et l'ensemble des arrête de $H$ provient d'un certain nombre des arrête de $G$.  
+                 On dit alors que $G$ \textbf{\textcolor{red}{\textit{contient}}} $H$.   
+             \end{Definitionx}
+
+
+             \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.25\textwidth]{sousGraphe.png}
+                \end{center}
+                \caption{$H$ sous Graphe de $G$}
+             \end{figure}
+
+
+             \begin{Definitionx}{Graphe connexe}{}
+                 Un \textbf{graphe} $G$ est dit \textbf{connexe} si pour n'importe quel sommet $x$ et $y$, 
+                 il existe un chemin dans $G$ qui commence à $x$ et se termine à $y$. Un graphe qui n'est 
+                 pas connexe est \textbf{non connexe}.   
+             \end{Definitionx}
+             
+
+             \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.25\textwidth]{grapheComposant.png}
+                \end{center}
+                \caption{Graphe $G$ ayant trois composantes}
+             \end{figure}
+
+             \begin{Definitionx}{Composante d'une graphe}{}
+                 Une \textbf{composante d'un graphe} est un graphe connexe qui n'est pas un sous-graphe d'un 
+                 sous-graphe connexe plus large. 
+             \end{Definitionx}
+             Par exemple, dans la figure 2.7, le graphe $ab$ est un sous-graphes connexe, mais 
+             \textit{\textcolor{red}{n'est pas}  } une composante, puisque $ab$ est un sous-graphe connexe 
+             d'un sous-graphe connexe plus large, $X$. 
+
+
+             \section{Sommets et degrés d'Arbres et Forêts \texttt{\small{\S Hammack 15.2}}}
+            \begin{Definitionx}{Degré d'un sommet}{}
+                Soit un \textbf{sommet} $x$ d'un \textbf{graphe} $G$, le degré de $x$, déonoté 
+                $\texttt{deg}(x)$ est le nombre \textit{d'arrêwes} de $G$ incidantes à $x$. 
+                Pour le graphe suivant, on a : 
+            \end{Definitionx}
+           
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{degre.png}
+                \end{center}
+                \caption{Degré de sommets}            
+            \end{figure}
+            
+            
+            \begin{align*}
+                \texttt{deg}(a), \texttt{deg}(b) = 5,  \texttt{deg}(c) = 4, \texttt{deg}(d) = 3
+            \end{align*}
+
+            La somme des degrés pour chacun des sommet est donnée par 
+
+             \begin{align*}
+                 \texttt{deg}(a) + \texttt{deg}(b) + \texttt{deg}(c) + \texttt{deg}(d) &+ \texttt{deg}(e) \\
+                                                           &+ \texttt{deg}(f) \\
+                                                           &+ \texttt{deg}(g) \\
+                                                           &+ \texttt{deg}(h)
+            \end{align*}
+            Cela revient à faire la somme de tous les segments en gras dans le diagramme suivant. Et puisque 
+            chaque arrête possède \textbf{deux} segments gras, \textit{la somme de tous les sommets d'un graph est 
+            égal à deux fois la sommes de ses arrêtes}.
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{sommedeg.png}
+                \end{center}
+                \caption{Deux segments gras par arrêtes}
+            \end{figure}
+            
+
+            \begin{Theorem}{Degré d'un graphe}
+                Pour chaque \textbf{graphe} $G$, la \textit{somme des degrés} de ses sommets est 
+                \textbf{deux fois} la quantité d'arrête qu'il possède, c'est-à-dire, 
+
+                \begin{align*}
+                        \sum_{x\in V(G)} \texttt{deg}(x) = 2 |E(G)|.
+                \end{align*}
+            \end{Theorem}                    
+
+
+            Le corollaire de ce théorème est que la somme des degrés des sommets est 
+            \textit{\textcolor{red}{toujours paire}}. Par ailleurs, nous savons que 
+            si la somme est paire, le nombre de degrés impair doit être paire.
+
+
+            \begin{prop}{}{}
+                Un \textbf{graphe} a un nombre pair de sommets de degrés impair
+            \end{prop}
+
+
+            Une identité parfois utile est la moeyennes des degrés d'un grpahes. 
+            Il est possible d'obtenir la \textit{moyenne des degrés d'un graphe} en divisant 
+            la somme des degrés d'un graphe par la quantité de sommets : 
+
+            \[ 
+            \dfrac{\sum_{x\in V(G)}\texttt{deg}(x)}{|V(G)|} =  \dfrac{\texttt{deg}(x) = 2 |E(G)|}{V(G)} \]
+
+
+            \begin{Definitionx}{Arbre et Forêt}{}
+                Un \textbf{arbre} est un \textit{graphe connexe} ne contenant aucun sous-graphe qui est 
+                un cycle. Une forêt est un graphe qui ne contient aucun cycle comme sous-graphe
+            \end{Definitionx}
+
+            Donc, une forêt est un graphe ayant des arbres comme composantes. 
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{Foret.png}
+                \end{center}
+                \caption{Une forêt}
+            \end{figure}
+
+            \begin{note}{}{}
+                Tous les \textbf{arbres} sont des \textbf{forêts} mais toutes les forêts 
+                \textit{ne sont pas} des arbres.   
+            \end{note}
+            
+            \begin{Theorem}{}
+                Si un \textbf{arbre} a $n$ sommets, alors il a $n - 1$ \textbf{arrêtes}. Si une forêt a 
+                $n$ \textbf{sommet}, alors elle a $n - c$ \textbf{arrêtes}, $c$ étant le nombre de 
+                composantes de la forêts. 
+            \end{Theorem}
+
+
+            \begin{Lemme}{Nombre de degrés d'un arbre}{}
+                Un arbre ayant plus d'un sommet \textbf{possède} un sommet de degré 1. Par ailleurs, 
+                n'importe quel arbre ayant plus d'un sommet \textbf{possède} \textit{deux} sommets 
+                de degré 1. 
+            \end{Lemme}
+
+            \begin{note}{}{}
+                Voir Hammack \textbf{p.} 357 pour prouver le Théorème 3. Et voir Hammack \textbf{p.} 358 
+                pour comprendre d'ou provient le Lemme 1. 
+            \end{note}
+
+
+
+                
+    \section{Coloration d'un graphe et nombres chromatiques \texttt{\small{\S Hammack 15.3}}}
+
+            
+            \begin{Concept}{}{}
+                Soit un entier $k$, une \textbf{k-coloration} d'un graphe est une assignation de $k$ 
+                \textbf{couleur} aux sommets d'un graphe, \textit{de sorte que chaque sommet obtienne une des 
+                k couleurs}.    
+            \end{Concept}
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{colorationGraphe.png}
+                \end{center}
+                \caption{Coloration de différents graphes. Seul le premier graphe possède une coloration propre.}
+            \end{figure}
+            
+
+            Une \textbf{coloration} est dite \textit{propre} si le graphe ne possède aucune sommets 
+            adjacent ayant la même couleur. 
+
+
+            \begin{Definitionx}{Nombre chromatique}{}
+                Le \textbf{nombre chromatique} d'un graphe $G$, dénoté $\chi(G)$ et le 
+                plus petit entier $k$ pour lequel le graphe $G$ possède une k-coloration propre. 
+            \end{Definitionx}
+            
+
+            \begin{note}{}{}
+                Chaque graphe complet $K_n$ a un nombre chromatique de $n$ : 
+                \[ \chi(K_n) = n \]
+                puisqu'on peut assigner une couleur différente à chacun des $n$ sommets. 
+            \end{note}
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{GraphesComplets.png}
+                \end{center}
+                \caption{Exemples de graphes complets}
+            \end{figure}
+            
+
+            \begin{note}{}{}
+                Chaque \textbf{graphe bipartis}   $K_{m,n}$ a un nombre chromatique : 
+                \[ \chi(K_{mn}) = 2 \]
+                puisqu'on peut imaginer chaque sommet $v \in X$ comme étant un coloré en noir
+                et chque sommet $v \in Y$ comme étant coloré en blanc. Ainsi, il suffit de deux 
+                couleurs pour engendrer une coloration \textit{propre}.    
+            \end{note}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{GraphesBi.png}
+                \end{center}
+                \caption{Exemples de graphes bipartis}
+            \end{figure}
+
+
+            \begin{note}{}{}
+                Chaque graphe cyclique $C_n$ peut a un nombre chromatique de 2 ou 3, dépendamment 
+                de son nombre de sommet :
+                \begin{equation*}
+                    \chi(C_n) = 
+                \begin{cases}
+                      2 & \text{si $n$ est pair} \\
+                      3 & \text{ si $n$ est impair}. 
+                    \end{cases}
+                \end{equation*}
+                Pour les graphes $C_n$ impairs, on peut toujours alterner entre deux couleurs entre chaque 
+                sommet du cycle, jusqu'au dernier sommet ou on doit alors assigner une troisième couleur.
+            \end{note}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{colorationsCycliques.png}
+                \end{center}
+                \caption{Colorations de graphes cycliques $C_n$}
+            \end{figure}
+
+
+            Le consensus est qu'il n'existe pas de formule générale pour trouver le \textbf{nombre chromatique}
+            d'un graphe au hasard, puisque ce problèeme est \textit{NP-complet}. Il est cepndant possible 
+            de faire une \textit{estimation} grâce à la proposition suivante qui permet de trouver 
+            la \textbf{borne inférireure} du nombre chromatique d'u graphe.   
+
+            \begin{prop}{}{}
+                Si $H$ est un sous-graphe de $G$, alors $\chi(H) \leq \chi(G)$. 
+            \end{prop}
+
+
+            Le théorème de Brook permet de trouver la \textbf{borne supérieure} du nombre chromatique d'un graphe.
+            \begin{Theorem}{Théorème de Brook}{}
+                Supposons que $G$ est un \textbf{graphe connexe} qui n'est ni un graphe complet, ni un graphe       
+                cyclique impair. Si le \textit{degré du sommet le plus élevé de} $G$ est $\Delta$, \textbf{alors} 
+                $\chi(G) \leq \Delta$. 
+
+                
+            \end{Theorem}
+
+
+            
+            
+
+    \chapter{Marche Eulérienne}
+
+
+
+    \section{Marche Eulérienne  \texttt{\small{\S Lehman et al. 12.9.1}}}
+
+            \begin{Concept}{}{}
+                Le concept de \textbf{marche Eulérienne} permet de répondre à des question telles que : 
+                \textit{est-il possible de traverser chaque couloir du Musé des Beaux Arts exactement une fois ?}  
+            \end{Concept}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{EulerWalk.png}
+                \end{center}
+                \caption{Existe-t-il une marche qui inclus chaque arrête exactement \textit{une fois}}
+            \end{figure}
+
+            \begin{Theorem}{Marche Eulérienne}{}
+                Un graphe connexe a une \textbf{marche Eulérienne} si et seulement si chaque sommet a un \textit{degré 
+                pair}.
+            \end{Theorem}
+            
+
+            \begin{Theorem}{Cycle d'Hamilton}{}
+                Un \textit{cycle Hamiltonien} dans un \textbf{graphe} $G$ est un cycle qui visite chaque 
+                sommet de $G$ exactement une fois. Similairement, un \textit{chemin Hamiltonient} est un chemin 
+                dans un graphe $G$ qui visite chaque sommet exactement une fois. 
+            \end{Theorem}
+
+
+    \chapter{Relations et Fonctions}
+
+    \section{Relations \texttt{\small{\S Hammack 16.1}}}
+
+
+            \begin{Concept}{Relations}{}
+               Les symboles tels que $<, \leq, =, |, \nmid, \geq, >, \in, \subset,$ etc. sont appelés 
+               \textit{relations} puisqu'ils communiquent une 
+               \tcbox[tbcsetLavender]{\textit{relation entre les entités}}. 
+            \end{Concept}
+
+
+            \begin{Definitionx}{Relation}{}
+                Une relation d'un ensemble $A$ est un sous-ensemble $R \subseteq A \times A$. 
+                L'ensemble $R$ contient donc des paires ordonnées $(x, y)$ telles que $x, y \in A$ 
+                Nous faisons 
+                souvent l'abbréviation de $ (x,y) \in R$ par $xRy$. L'affirmation 
+                $(x,y) \notin R$ est abbrévié $x\cancel{R}y$
+
+            \end{Definitionx}
+
+            \begin{note}{}{}
+                $A \times A$ est espace de 2$^e$ degré obtenu en effectuant le produit cartésien de 
+                $A$ par lui-même; il s'agit donc de \textit{l'ensemble des paires ordonnées} 
+                de $A$ par $A$. Une relation contient tous les les paires ordonnées et $A \times A$ ou 
+                seulement une certaine quantité d'entre elles : $R \subseteq A \times A$
+            \end{note}
+
+
+            \begin{EExample}{$\geq$}{}
+                Soit $A$ = {1, 2, 3, 4} et considéron l'ensemble suivant : 
+                \begin{align*}
+                    R = \Bigl\{ (1,1), (2,1), (2,2), &(3,3),\\ 
+                                                &(3,2), (3,1), (4,4), (4,3),\\ 
+                                                &(4,2), (4,1)\Bigr\} \subseteq A \times A
+                \end{align*}
+
+                L'ensemble $R$ est une relation sur $A$, par définition. Puisque $(1,1) \in R$, nous avons 
+                $1R1$ Nous avons également $2R1$ et $2R2$, et ainsi de suite. Or, nous avons 
+                $3\cancel{R}4$. En realité, l'ensemble $R$ décrit la relation $\geq$ pour l'ensemble $A$. 
+            \end{EExample}
+
+
+            \begin{EExample}{Parité}{}
+                 Soit $A$ = {1, 2, 3, 4} et considéron l'ensemble suivant : 
+                \begin{align*}
+                    S = \Bigl\{ (1,1), (1,3), &(3,1), (3,3), \\ 
+                                              &(2,2), (2,4), (4,2), (4,4)
+                                              \Bigr\} \subseteq A \times A
+                \end{align*}
+
+                En réalité, $S$ exprime la relation \textit{a la même parité que}. 
+                Nous savons que $(1,3) \in S$ et donc $1S3$ se lit \textbf{1}  
+                \textit{a la même parité que} \textbf{3}.      
+            \end{EExample}
+
+            \begin{EExample}{Parité $\geq$}{}
+                Constatons que : 
+                \begin{align*}
+                    R \cap S =  \Bigl\{(1,1),&(3,1),  
+                                             (3,3), (2,2),  
+                                             (4,2), (4,4) \Bigr\} 
+                 \subseteq A \times A
+                \end{align*}
+                En réalité, $x(R\cap S)y$ signifie \textbf{\textit{x}} $\geq$ \textbf{\textit{y}} 
+                \textit{, et \textbf{x} et \textbf{y} ont la même parité}.   
+            \end{EExample}
+        
+
+
+            \begin{note}{}{}
+                 Les relations n'ont pas toujours de signification courante. 
+                 Soit l'ensemble $B = {0, 1, 2, 3, 4, 5}$, la relation  
+                \begin{align*}
+                            U = \Bigl\{ (1,3), (3,3), (5,2), (2,5), (4,2) \Bigr\} 
+                            \subseteq B \times B 
+                \end{align*}
+                ne contient \textit{aucun sens dans le language courant}. Et pourtant, 
+                $U$ est une relation de $B$
+            \end{note}
+
+            Il est possible de représenter une relation par un graphe ou une image.
+            Par contre, toutes les relations ne peuvent pas \textit{nécessairement} être représentées 
+            de façon visuelles. C'est le cas pour les relation qui impliquent des ensembles infinis. 
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.25\textwidth]{relationUB.png}
+                \end{center}
+                \caption{Relation de $U \subseteq B \times B$}
+            \end{figure}
+
+
+            \begin{EExample}{Généralisation de $>$}{}
+                Considérons l'ensemble : 
+                                \[ R = \Bigl\{ (x,y) \in Z \times Z : x - y \in \mathbb{N} \Bigr\}  
+                                 \subseteq  Z \times Z \]
+
+                En réalité, $R$ est relation ; $R$ exprime la relation $>$.  
+            \end{EExample}              
+            \pagebreak
+
+
+    \section{Propriétés des relations \texttt{\small{\S Hammack 16.2}}}
+
+            \begin{Concept}{Relations en tant que propositions}{}{}
+                    Une relation $xRy$ peut être interprétée comme une proposition ; elle est soit vraie 
+                    ou soit fausse. Par exemple, $5 < 10$ est vraie et donc la relation $R \subseteq A$ qui 
+                    définit le sens de $<$ peut être combinée à des opérateurs logiques pour former de 
+                    nouvelles propositions  :
+                                    \[ xRy  \implies yRx \]
+                    La \textit{proposition} ci-haut est formée à partir de la relation $R$ et est donc soit 
+                    vraie \textbf{ou} fausse.   
+            \end{Concept}       
+            
+            
+            \begin{note}{}{}
+                Certaines relation ont des \textbf{propriétés} que d'autres relations n'ont pas  
+                Par exemple, la relation $\leq$ sur $\mathbb{Z}$ satisfait $x \leq x$, \textbf{alors que}
+                la relation $<$ engendre un proposition $xRx$ qui est fausse sur $\mathbb{Z}$, puisque 
+                il n'est jamais vrai que $x<x$. 
+           \end{note}
+
+           \begin{Definitionx}{\textit{Propriétés} de relations}{}
+               \begin{itemize}
+                \item $R$ est dite \tcbox[tbcsetLavender]{\textit{reflexive}} si 
+                    \[ \forall x \in A, xRx \]
+
+                \item $R$ est dite \tcbox[tbcsetLavender]{\textit{symétrique}} si  
+                    \[ \forall x \in A, xRy \implies yRx \]
+
+                \item R est dite \tcbox[tbcsetLavender]{\textit{transitive}} si 
+                    \[ \forall x, y, z \in \mathbb{A}, \Bigl( (xRy)\land\ (rRz) \Bigr) \implies (xRz)\]
+               \end{itemize}
+           \end{Definitionx}
+
+
+           \begin{table}[H]
+
+             \begin{center}
+               \renewcommand{\arraystretch}{1.5}
+               \fontfamily{flr}\selectfont
+               \footnotesize
+                   \begin{tabular}{|l|l l l l l l|}
+                   \arrayrulecolor{blue}\hline
+                   \rowcolor{lightBlue}
+                   \textcolor{myb}{Relation sur $\mathbb{Z}$ } & \textcolor{myb}{$<$}
+                                                    & \textcolor{myb}{$ \leq $} 
+                                                    & \textcolor{myb}{$ = $} 
+                                                    & \textcolor{myb}{$|$} 
+                                                    & \textcolor{myb}{$\nmid$} 
+                                                    & \textcolor{myb}{$\neq$}  
+                   \\
+                   \hline
+                   \hline
+                   \arrayrulecolor{black}
+                   Réflexif & non & oui & oui & oui & non & non  
+                   \\
+                   \hline
+                   Symétrique & non & non & oui & non & non & oui                    
+                   \\
+                   \hline
+                   Transitif & oui & oui & oui & non & non & non                  
+                   \\ 
+                   \hline
+                   \end{tabular}
+           \end{center}
+                \caption {Relations sur $\mathbb{Z}$ }
+           \end{table}
+
+
+           \begin{Remarque}{Déduction par diagramme}{}
+               Les diagrammes de relations permettent d'indentifier rapidement les 
+               \textit{propriétés} d'une relation.  
+           \end{Remarque}
+
+
+           \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.45\textwidth]{proprietesGraphiquesRelations.png}
+            \end{center}
+            \caption{Propriétés des relations (Hammack 16.2})
+           \end{figure}
+
+
+    \section{Relations d'équivalence \texttt{\small{\S Hammack 16.3}}}
+            
+        
+            
+            Plusieurs relations telles que $=$ sont \textit{réflexives} \textbf{et} \textit{transitives} 
+            \textbf{et} \textit{symétriques}. Une relation qui possède ces trois propriétés à la fois est 
+            appelé \textit{relation d'équivalence}.   
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{RelationEquivalence.png}
+                \end{center}
+                \caption{Relations déquivalence selon Hammack 16.3}
+            \end{figure}
+            \pagebreak
+
+            Lorsque $R$ est une relation d'équivalence sur l'ensemble $A$, $R$ divise $A$ 
+            en sous-ensembles appelés des \textit{classes équivalentes}.
+
+            \begin{Definitionx}{}{}
+                Soit l'ensemble $A$, la relation $R$ sur $A$ et un certain élément $a \in A$, une 
+                \textbf{classe d'équivalence} est un sous-ensemble de $A$ qui contient tous 
+                les éléments $x$ tels que $xRa$ est vrai. Ce sous ensemble est noté $[a]$; 
+                \textbf{Donc}, la classe d'équivalence contenant $a$ est l'ensemble 
+                        \[ [a] = \{ x \in A: xRa \}\]
+            \end{Definitionx}
+
+
+            \begin{EExample}{}{}
+                Soit l'ensemble $A = \{ 1, 2, 3, 4\}$, la relation $=$ et l'entité $a \in A = 2$. La classe 
+                d'équivalence $[2]$ sur $A$ est le sous-ensemble $\{ x \in A : x = 2 \}$. 
+                Puisque seul $2$ a une telle relation avec lui-même, le seul élément de $[2]$ est $2$ :
+                                        \[ [2] = \{2\}\]
+            \end{EExample}      
+
+
+            \section{Classes d'équivalence et partitions \texttt{\small{\S Hammack 16.4}}}
+                
+            \begin{Theoremcon}{$[a] = [b]  \leftrightarrow aRb$ }
+                Suppossons que $R$ est une relation d'équivalence sur un ensemble $A$. Et supposon que 
+                $a, b \in A$. \textbf{Alors}, $[a] = [b]$ \textit{si et seulement si} $aRb$.     
+            \end{Theoremcon}
+
+
+
+                
+            \begin{Preuve}{}{}
+                \underline{\textbf{Prouver que $[a] = [b] \implies aRb$}}
+                \vspace{1em}\\
+                Supposons que $[a] = [b]$. Nous savons que $aRa$, \textit{par la propriété réflexive} de $R$. 
+                \textbf{Donc}, $a$ appartient à l'ensemble des nombres $x$ tels que $xRa$. Mais cet ensemble, 
+                par définition, est [a]. Et par l'hypothèse d'origine, $[a] = [b]$. Ainsi, 
+                $a$ appartient également à l'ensemble des nombres $x$ tels que $xRb$ (puisque $x \in [a] = [b])$. 
+                Ainsi, nous pouvons déduire que $aRb$. Nous résumons la logique ci-haut par l'expression 
+                suivante.  
+
+                \[ a \in \underbrace{\{ x \in A : xRa \}}_{\textit{def. de $[a]$}} = 
+                    \underbrace{[a] = [b]}_{\textit{hypothèse}}  = 
+                    \underbrace{\{ x \in A : xRb \}}_{\textit{def de $[b]$}} \]
+
+                Nous avons montré que, si $[a] = [b]$ (hypothèse), il s'ensuit que $aRb$.
+                \vspace{1em}
+                \\
+
+
+
+                \underline{\textbf{Prouver que $aRb \implies [a] = [b]$}}
+                \vspace{1em}\\
+                \textcolor{myp}{Supposons que $aRb$}. Nous devons alors prouver que $[a] = [b]$. Nous procéderons 
+                en montrant que si $c \in [a]$, \textbf{alors} $x \in [b]$ \textbf{et que} si 
+                $c \in [b]$, \textbf{alors} $c \in [a]$. 
+                \vspace{1em}\\
+                \underline{\textbf{1. Montrer que $\forall c \in \mathbb{Z}, c \in [a] \implies  c \in [b]$}}
+                \vspace{1em}\\
+                Supposons que  $c \in [a]$. \textbf{Puisque} $c \in [a] = \{ x \in A : xRa \}$, nous 
+                avons $cRa$. Par l'hypothèse d'origine, nous abons $aRb$ et $cRa$ (que nous venons de déduire), 
+                et, par conséquent $bRa$, puisque $R$ est symétrique. Sachant que $cRa$ et $aRb$, nous 
+                pouvons conclure que $cRb$, \textbf{puisque} $R$ est transitif. Et nous savons que 
+                $cRb$ signifie que $c \in \{x \in A : xRb \} = [b]$. \textbf{Et donc}, $x \in [b]$.   
+                Ainsi, nous venons de montrer que \textbf{si} $c \in [a]$, \textbf{alors} $c \in [b]$, pour tout 
+                $c \in \mathbb{Z}$. Cela signifie que $[a] \subseteq [b]$. 
+                \vspace{1em}
+                \\ 
+
+                \underline{\textbf{2. Montrer que $\forall c \in \mathbb{Z}, c \in [b] \implies  c \in [a]$}}
+
+                Supposons que $c \in [b]$. Puisque $c \in [b] = \{ x \in A : xRb \}$, nous avons 
+                $cRb$. \textbf{Or}, par \textcolor{myp}{l'hypothèse}, nous avons $aRb$ et $cRb$ (que nous venons 
+                de déduire). Mais puisque $R$ est réflexif, à partir de $aRb$, nous avons $bRa$.
+                Mainteant nous avons $cRb$ et $bRa$. Il s'ensuit alors que $cRa$, \textbf{puisque} $R$ est 
+                transitif. Et nous savos que $cRa$ signifie que $c \in \{x \in A : xRa \} = [a]$. Donc, 
+                nous concluons que $c \in [a]$. Ainsi, nous venons de montrer que si 
+                $c \in [b]$, \textbf{alors}, $c \in [a]$, pour tout $c \in \mathbb{Z}$. Cela signifie que   
+                $[b] \subseteq [a]$. 
+                \vspace{1em}
+                \\ 
+                Nous venons de montrer que si $c \in [a]$, il s'ensuit que $[a] \subseteq [b]$ 
+                \textbf{et que} $[a] \subseteq [a]$. Cela signifie que $[a] = [b]$. 
+                \qed
+            \end{Preuve}
+
+
+            \section{Partitions \texttt{\small{\S Hammack 16.4}}}
+            Une relation d'étquivalence $R$ sur un ensemble $A$ divise $A$ en plusieurs  
+            \textit{classe d'équivalence}. 
+
+            \begin{Definitionx}{Partition}{}
+                Une \textbf{partition} d'un ensemble $A$ est un ensemble composé de sous-ensembles non vide 
+                de $A$ tels que l'unions de ces sous-ensembles est égale à $A$, et l'intersection 
+                entre n'importe quelle paire de sous-ensemble faisant parti de cet ensemble est tojours $\emptyset$. 
+            \end{Definitionx}
+
+            Autrement dit, aucun objet ne peut se trouver dans deux ou plusieurs sous-ensembles différents 
+            d'une partition de $A$. 
+
+
+            \begin{EExample}{Partition}{}
+                Soit $A = \{1, 2, 3, 4\}$. Une partition de $A$ pourrait être : 
+                \[ \bigl\{ \{1\}, \{2,3\}, \{4\} \bigr\} \]
+            \end{EExample}
+
+
+            \begin{Theorem}{}{}
+                Les classes d'équivalence d'un ensemble $A$ forment une partition de cet ensemble. 
+            \end{Theorem}
+
+
+            \begin{Preuve}{}{}
+                L'union de tous les ensembles $[a]$, des classes d'équivalence de $A$ est donoté par 
+                \[ \bigcup_{a \in A} [a] \]
+                Nous devons donc prouver que $\bigcup_{a \in A}[a] = A$. Pour cela, il faut \textbf{1.} Montrer 
+                $\bigcup_{a \in A}[a] \subseteq A$  \textbf{et} \textbf{2.} $A \subseteq \bigcup_{a \in A}[a] $     
+                \vspace{1em}
+                \\
+                \underline{\textbf{1. Montrer que $\bigcup_{a \in A}[a] \subseteq A$}}
+                \vspace{1em}  
+                \\
+                Supposons que $x \in \bigcup_{a \in A}[a]$. \textbf{Alors}, nous savons que $x \in [a]$ pour un 
+                certain $a \in A$. Puisque $[a] \subseteq A$, il s'ensuit que $x \in A$. 
+                Notons que, par définition, tous les $x \in [a]$ doivent se trouver dans $A$, puisque 
+                $[a] = \{ x \in A : xRa \}$. Nous venons de montrer que si $x \in \bigcup_{a \in A}[a]$, alors 
+                $x \in A$. Cela montre que $\bigcup_{a \in A}[a] \subseteq A$.
+                \vspace{1em} 
+                \\ 
+                \underline{\textbf{2. Montrer que $A \subseteq B \bigcup_{a \in A}[a]$}}
+                \vspace{1em}  
+                \\
+                Supposons que $x \in A$. \textbf{Puisque} $x \in [x]$, nous savons \textbf{alors} que 
+                $x \in [a]$ pour une certain $a \in A$ (c'est-à-dire un $a = x$). \textbf{Et puisque}
+                $x \in [a]$, il s'ensuit que $x \in \bigcup_{a \in A}[a]$.                   
+                \vspace{1em}
+                \\
+                Finalement, nous devons montrer que si $[a] \neq [b]$ \textbf{alors} $[a] \cap [b] = \emptyset$   
+                Nous procédons par contraposé. Supposons que $[a] \cap [b] \neq \emptyset$, 
+                Ainsi, il existe une élément $c$ tel que $c \in [a]$ et $c \in [b]$. 
+                \textbf{Nous savons que} $c \in [a]$ signifie que $cRa$ et que $aRc$, puisque 
+                $R$ est symétrique. \textbf{Pareillement}, $c \in [b]$ singifie que $cRb$. Nous avons 
+                alors $aRc$ et $cRb$. \textbf{Et ainsi}, nous avons, $aRb$, \textbf{puisque} $R$ 
+                \textbf{est transitif}. Par le théorème précédent, nous avons $aRb \implies [a] = [b]$. 
+                Nous venons de montrer la contraposée : $([a] \cap [b] \neq \emptyset) \implies [a] = [b]$. 
+                \vspace{1em}
+                \\
+                Nous avons montré que $\bigcup_{a \in A}[a] = A$ et que deux sous-ensembles 
+                $[a] \neq [b]$ de $A$ n'ont pas d'intersection. Il s'ensuit que le Théorème est vrai. 
+                \qed. 
+            \end{Preuve}
+
+        \section{Entiers modulo $n$ \texttt{\small{Hammack 16.5}}}
+ 
+            
+                \begin{Theoremcon}{}
+                    $\forall n \in \mathbb{N}, \quad \equiv (\mod{n}) $ est une relation
+                    réflexive, transitive et symétrique.
+                \end{Theoremcon}
+
+
+                Les \textbf{classes d'équivalence} de la relation $ \equiv (\mod{5})$
+                sont particulièrement importantes, puisqu'elles engendrent un système utile. 
+
+                \begin{align*}
+                    [0] = \{ x \in \mathbb{Z} : x \equiv 0 (\mod{5})\} &= \{ x \in \mathbb{Z}: 5|(x-0)\} \\ 
+                                                    &= \{ \dots , -10, -5, 0, 10, 15, \dots \} 
+                                                    \\
+                    [1] = \{ x \in \mathbb{Z} : x \equiv 0 (\mod{4})\} &= \{ x \in \mathbb{Z}: 5|(x-1)\} \\ 
+                                                    &= \{ \dots , -9, -4, 1, 6, 11, 16, \dots \}
+                                                    \\
+                    [2] = \{ x \in \mathbb{Z} : x \equiv 2 (\mod{5})\} &= \{ x \in \mathbb{Z}: 5|(x-2)\} \\ 
+                                                    &= \{ \dots , -8, -3, 2, 7, 12, 17, \dots \}
+                                                    \\
+                    [3] = \{ x \in \mathbb{Z} : x \equiv 0 (\mod{3})\} &= \{ x \in \mathbb{Z}: 5|(x-3)\} \\ 
+                                                    &= \{ \dots , -7, -2, 3, 8, 13, 18 \dots \}
+                                                    \\
+                    [4] = \{ x \in \mathbb{Z} : x \equiv 0 (\mod{4})\} &= \{ x \in \mathbb{Z}: 5|(x-4)\} \\ 
+                                                    &= \{ \dots , -6, -1, 4, 9, 14, 19, \dots \}
+                \end{align*}                
+
+                \begin{note}{}{}
+                    Ces classes d'équivalence forment une partition de l'ensemble $\mathbb{Z}$. \textbf{Par ailleurs},
+                    $[0] = [5] = [10] = [15]$ \textit{et ainsi de suite}. Nous savons aussi que 
+                    $[1] = [6] = [11] = [16]\dots$     
+                \end{note}
+
+
+                \begin{Concept}{Opérations sur $\mathbb{Z}_5$}{}
+                        Les cinq classes d'équivalences forment un ensemble appelé $\mathbb{Z}_5$
+                        forment un système qui permet les opérations suivantes : 
+                        \begin{align*}
+                                        [a] + [b] = [a + b] \\ 
+                                        [a] \cdot [b] = [a \cdot b]
+                        \end{align*}                        
+                \end{Concept}
+
+
+                \begin{Definitionx}{Entiers modudlo $n$}{}
+                        Soit $n \in \mathbb{N}$. Les classes d'équivalence de la relation d'équivalence 
+                        $\equiv (\mod n)$ sont $[0], [1], [2], \dots, [n-1]$. Les \textbf{entiers modulo n} est 
+                        l'ensemble $\mathbb{Z} = \{ [0], [1], [2], \dots, [n-1] \}$. Les éléments de $Z_n$ peuvent 
+                        être additionnés avec la règle $[a] + [b] = [a + b]$ et $[a] \cdot [b] = [a \cdot b]$. 
+                         
+                \end{Definitionx}
+
+
+        \section{Relations entre les ensembles \texttt{ \small{\S Hammack 16.6}}}
+
+
+            \begin{Definitionx}{Relation entre deux ensembles}{}
+                Une \textbf{relation} de l'ensemble $A$ à l'ensemble $B$ est le sous-ensemble 
+                $R \subseteq A \times B$. On peut, dans ce cas, abbrévier l'expression 
+                $(x, y) \in R$ par $xRy$, sachant que $x$ et $y$ appartiennent aux ensembles 
+                $A$ et $B$, respectivement.
+            \end{Definitionx}
+
+
+    \pagebreak
+    \chapter{Fonctions}
+
+    \section{Fonction \texttt{\small{\S Hammack 16.1}}}
+
+            \begin{EExample}{$x^2$}{}
+                Considérons la \textbf{fonction} suivante : $f(x) = x^2$. Nous pouvons alors réécrire $f$ comme suit 
+
+                \[ R = \{ (x, x^2) : x \in \mathbb{R} \} \subseteq \mathbb{R} \times \mathbb{R} \]
+            \end{EExample}
+
+
+            \begin{EExample}{$|n| + 2 $}{}
+                Considérons la fonction suivante : $f(x)= |n| + 2$. Nous pouvons alors réécrire $f$ comme suite 
+
+                \[ R = \{ (x, |x| +2) : x \in \mathbb{Z} \} \subseteq \mathbb{Z} \times \mathbb{N}\]
+            \end{EExample}
+
+
+            \begin{Definitionx}{Fonction}{}
+                Supposons que $A$ et $B$ sont des ensembles. Une \textbf{fonction} $f$ de $A$ à $B$ 
+                dénoté $f : A \rightarrow B$, est une relation $f \subseteq A \times B$ de $A$ à $B$, satisfaisant 
+                la \textbf{propriété} que pour chaque $a \in A$, la relation $f$ contient exactement 
+                une \textit{paire ordonnée} $(a,b)$. L'affirmation $(a,b) \in f$ est abbréviée $f(a) = b$.   
+            \end{Definitionx}
+
+
+            \begin{Definitionx}{Domaine, codomaine, étendue}{}
+                Une fonction $f : A \rightarrow B$, l'ensemble $A$ est appelé \textbf{domaine}
+                de $f$. L'ensemble $B$ est appelé le \textbf{codomaine} de $f$. L'ensemble des valeurs 
+                $b \in B$ qui sont 
+                telles que $f(a) = b$ est l'\textbf{image} de $f$.  
+            \end{Definitionx}
+
+
+            \begin{note}{}{}
+                Lorsque $A$ et $B$ contiennent un ensemble \textbf{fini} et suffisamment petit de 
+                valeurs, il est parfois utile de les représenter graphiquement. 
+            \end{note}
+            
+            
+
+                
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.35\textwidth]{fonctionRepGraph.png}
+                \end{center}
+                \caption{Représentation graphique de la fonction $f = \{(p, 0), (q, 1), (r, 2), (s, 2) \}$}
+            \end{figure}
+
+
+            \begin{Definitionx}{Égalité de deux fonctions}{}
+                Deux fonctons $f : A \rightarrow B$ et $g : A \rightarrow D$ sont \textbf{égales} si 
+                $f(x) = g(x)$ pour tout $x \in A$. 
+            \end{Definitionx}
+
+
+
+            
+
+    \section{Fonctions injectives et Surjectives \texttt{\small{\S Hammack 16.2}}}
+            
+
+        \begin{Definitionx}{Propriétés}{}
+            Une fonction $f : A \rightarrow B$ est :
+            \begin{itemize}
+                \item \textbf{Injective} ou dite \textit{1 pour 1} \textbf{si} pour tout 
+                    $x, y \in A, x \neq y \implies f(x) \neq f(y)$; 
+                \item \textbf{Surjective} ou dite \textit{mappé sur} \textbf{si} pour tout 
+                    $y \in B$, il existe un $x$ est tel que $f(x) = y$; 
+                \item \textbf{Bijective} \textbf{si} $f$ est à la fois injective \textbf{et} surjective  
+            \end{itemize}
+        \end{Definitionx}
+
+
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.50\textwidth]{Injective.png}
+            \end{center}
+            \caption{Injectivité et surjectivité}
+        \end{figure}
+
+
+        \begin{note}{}{}
+            Parfois il est nécessaire de \textbf{prouver qu'une fonction est injective}. On peut utiliser 
+            les deux approche qui suivent
+        \end{note}
+        
+
+        
+        \pagebreak
+        \begin{itemize}
+            \item \textbf{Preuve directe} pour montrer que $f : A \rightarrow  B$ est \textit{injective}    
+                \begin{enumerate}
+                    \item[$\blacktriangleright$] L'\textbf{objectif} est de montrer que : 
+                        \[ \forall x, y \in A, (x \neq y) \implies f(x) \neq f(y) \]
+                    \item[$\blacktriangleright$] Supposer que   $x, y \in A$ \textbf{et } $x \neq y$.   
+                    \item[$\rhd$] Conclure que $f(x) \neq f(y)$.
+                \end{enumerate} 
+            \item \textbf{Preuve par contraposée} pour montrer que $f : A \rightarrow B$ est \textit{injective}  
+                \begin{enumerate}
+                    \item[$\blacktriangleright$] Supposer que $x, y \in A$ \textbf{et} $f(x) = f(y)$.  
+                    \item[$\rhd$] Conclure que $x = y$.                    
+                \end{enumerate}
+
+            \item \textbf{Preuve par contre-exemple} pour montrer que $f : A \rightarrow B$ \textbf{n'est pas}
+                injective.
+                \begin{enumerate}
+                    \item[$\blacktriangleright $]
+                        Il faut réfuter la proposition : \\ $ (x \neq y) \implies \Bigl(f(x) \neq f(y) \Bigr) $
+                    \item[$\rhd $] Il suffit de trouver deux \textbf{éléments} $x, y \in A$ pour 
+                        lesquels $x \neq y$ \textbf{et} $f(x) = f(y)$.   
+                \end{enumerate}
+
+            \item \textbf{Prouver} que  $f : A \rightarrow B$ est \textit{surjective}   
+                    \item[$\blacktriangleright$] L'\textbf{objectif} est de montrer que : 
+                        \[ (b \in B) \implies \exists a \in A, f(a) = b \]
+                \begin{enumerate}
+                    \item[$\blacktriangleright$] Supposer que $b \in B$. 
+                    \item[$\rhd$] Montrer qu'il existe un $a \in A$ tel que 
+                        $f(a) = b$. 
+                \end{enumerate}
+
+            \item \textbf{Prouver} que $f : A \rightarrow  B$ \textit{n'est pas surjective}    
+                \begin{enumerate}
+                    \item[$\rhd$] Montrer qu'il existe un $b$ : 
+                        \[\exists b \in B, \forall a \in A, f(x) \neq f(b)\]  
+                \end{enumerate}
+        \end{itemize}           
+
+
+        \section{Reformulation du principe du pigeonnier \texttt{\small{\S Hammack 17.3}}}
+
+
+            \begin{Concept}{Adaptation du principe}{}
+                Supposons qu'un \textbf{ensemble} $A$ de \textit{pigeons} volent 
+                vers un ensemble $B$ de \textit{pigeonnier}. Ce phénomène peut être décris pas 
+                la fonction $f : A \rightarrow  B$ où un pigeon $X$ vole à l'intérieur d'un 
+                pigeonnier $f(X)$. 
+                \vspace{1em}
+                \\
+                Nous constatons alors que si \textbf{le nombre de pigeon est supérieur} au nombre de pigeonnier, 
+                cela force \textbf{deux pigeons} à voler dans la même case; $f : A \rightarrow  B$ 
+                n'est donc pas \textit{injective}. Nous constatons aussi que si 
+                \textbf{le nombre de piegons est inférireure} 
+                au nombre de piegonnier, il reste au moins un case vacante; $f : A \rightarrow  B$ n'est donc 
+                pas \textit{surjective}.  
+            \end{Concept}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{Piegonnier.png}
+                \end{center}
+            \end{figure}
+
+
+            \begin{Theorem}{Le principe du pigeonnier}{}
+                Supposons que $A$ et $B$ sont des ensemble fini et que $f : A \rightarrow  B$ est 
+                une fonction quelconque. \textbf{Alors}, 
+
+                \begin{itemize}
+                    \item Si $|A| > |B|, f$ \textit{n'est pas} \textbf{injective}. 
+                    \item Si $|A| < |B|, f$ \textit{n'est pas} \textbf{surjective}.   
+                \end{itemize}
+            \end{Theorem}
+
+
+            \section{Composition \texttt{\small{\S Hammack 17.4}}}
+
+
+            \begin{Definitionx}{Composition}{}
+                Supposons que $f : A \rightarrow B, g : B \rightarrow C$ sont des \textbf{fonctions} ayant la 
+                propriété que le codomaine de $f$ est le domaine de $g$. La \textbf{composition} de 
+                $f$ avec $g$ est une autre fonction, dénotée $ g \circ f$ et suivant la règle suivante : 
+                Si $x \in A$, \textbf{alors} $g \circ f(x) =  g(f(x))$. Par conséquent, $g \circ f $ envoit 
+                les éléments de $A$ aux éléments de $C$ ; $g \circ f: A \rightarrow  C$. 
+            \end{Definitionx}
+
+            
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.30\textwidth]{Composition.png}
+                \end{center}
+                \caption{Composition $g\circ f$}
+            \end{figure}
+
+            \begin{note}{}{}
+                Pour que l'expression $g\circ f$ ait un sens, il faut que le codomaine de $f$ soit égal 
+                au domaine de $g$ ou qu'il soit au moins un sous-ensemble du domaine de $g$. 
+            \end{note}
+            \pagebreak
+
+
+            \begin{Theorem}{Associativité de la composition}
+                Les composition de fonction sont \textbf{associatives}. C'est-à-dire que 
+                \textbf{si} $f : A \rightarrow  B$, 
+                $g : B \rightarrow  C, h : C \rightarrow  D$, \textbf{alors} $(h \circ g)\circ f = 
+                h \circ (g \circ f)$. 
+            \end{Theorem}
+
+
+            \begin{Preuve}{}{}
+                Supposons que $f, g, h$ sont tels que mentionnées. Il s'ensuit que, \textit{par la définition d'une} 
+                composition, $(h \circ g)\circ f$ \textbf{et} $h \circ (g \circ f)$ sont toute deux 
+                des \textbf{fonctions de} $A$ à $D$. Pour montrer qu'elles sont égales, nous devons montrer que :
+                        \[ \Bigl( (h \circ g)\circ f\Bigr)(x) = \Bigl( h\circ(g\circ f)\Bigr)(x) \]
+                \begin{align*}
+                    \Bigl( (h \circ g)\circ f\Bigr)(x) = (h\circ g)(f(x)) = 
+                    \underbrace{h(g(f(x)))}_{\textit{def. composition}}  
+                    \\ 
+                    \Bigl( h \circ (g\circ f)\Bigr)(x) = h\circ (g(f(x)) = 
+                    \underbrace{h(g(f(x)))}_{\textit{def. composition}}  
+                \end{align*}
+
+                \textbf{Donc}, l'égalité tient, puisque les deux côté de l'égalité que nous devions 
+                prouver sont égal à  $h(g(f(x)))$. \qed
+            \end{Preuve}                
+
+
+            
+            \begin{Theorem}{}{}
+                Supposons que $f : A \rightarrow B, g : B \rightarrow C$, \textbf{Si} $f$ et $g$ 
+                \textbf{sont toutes deux} \textit{injectives}, \textbf{alors} $g \circ f$ est \textbf{injective}. 
+                \textbf{Si} $f$ et $g$ \textbf{sont toutes deux} 
+                \textit{surjectives}, \textbf{alors} $g \circ f$ est \textbf{surjective}. 
+            \end{Theorem}
+
+
+            \begin{Preuve}{}{}
+                Supposons que $f$ et $g$ sont \textbf{toutes deux} 
+                \textit{injectives}. Pour montrer que la \textbf{composition}
+               $g\circ f$ est injective, nous devons montrer que \textbf{si} $g\circ f(x) = g\circ f(y)$, 
+               \textbf{alors} $x = y$, nécessairement. Pour cela, supposons que $g\circ f(x) = g\circ f(y)$. 
+               Nous avons alors $g(f(x)) = g(f(y))$, \textit{par la définition de compoosition}. \textbf{Ainsi}, 
+               nous avons l'égalité $f(x) = f(y)$. Pour que cette égalité soit vraie, il faut que $x = y$. Et 
+               puique $f$ est injective ($f(x) = f(y)$ seulement lorsque $x = y$), nous savons que 
+               $x = y$, \textbf{nécessairement}; il n'existe pas de $y \neq x$ tel que $f(x) = f(y)$ à cause 
+               de la proprité d'injectivité de $f$. Par conséquent, $g\circ f$ est injective.    
+               \vspace{1em}
+               \\
+               Supposons maintenant que $g$ et $f$ sont \textbf{toutes deux} \textit{surjectives}. Pour montrer que 
+               la \textbf{composition} $g\circ f$ est surjective, nous devons montrer que n'importe pour 
+               n'impoorte quel élément $c \in C$, il existe un \textbf{élément correspondant}   $a \in A$ tel que 
+               $g\circ f(a) = c$. Considérons une valeur arbibraire $c \in C$. Parce que                        
+               $g$ est surjectif, il y a un élément $b \in B$ pour lequel $g(b) = c$. Et puisque 
+               $f$ est surjectif, il y a un élément $a \in A$ pour lequel $f(a) = b$. Par conséquent, 
+               $g(f(a)) = g(b) = c$, ce qui veut dire que $g\circ f(a) = c$. \textbf{Ainsi}, 
+               $g\circ f$ est \textbf{surjectif}. \qed  
+            \end{Preuve}
+
+\
+
+    \section{Fonctions inverses \texttt{\small{\S Hammack 17.5}}}
+            
+
+            \begin{Definitionx}{Fonction d'indentité}{}
+                   Soit une ensemble $A$, la \textbf{fonction d'identité} sur $A$ est la fonction 
+                   $i_A : A \rightarrow  A$ définit par $i_A(x) = x$ pour tout $x \in A$. 
+            \end{Definitionx}   
+
+
+
+            \begin{EExample}{}{}
+                Si $A = \{ 1, 2, 3 \}$, \textbf{alors} $i_A = \{(1, 1), (2, 2), (3, 3) \}$. Par ailleurs, 
+                $i_{\mathbb{Z}} = \Bigl\{ (n, n) : n \in \mathbb{Z} \Bigr\}$
+            \end{EExample}
+
+
+            \begin{note}{}{}
+                La fonction d'identité d'une ensemble $A$, $i_A$ est toujours bijective. Elle est 
+                injective puisque $i_A(x) = i_A(y)$ implique que $x = y$. Elle est surjective parce que 
+                si on prend n'importe quel élément $b$ dans le codomaine de $A$, \textbf{alors} $b$ est 
+                également dans le domaine de $A$, et $i_A(b) = b$. 
+            \end{note}
+
+
+            \begin{Definitionx}{Relation inverse}{}
+                Soit une relation $R$ de $A$ à $B$, la \textbf{relation inverse de} $R$ est la relation 
+                de $B$ à $A$ définit par $R^{-1} = \Bigl\{ (y, x): (x, y) \in R \Bigr\}$. \textbf{Aisi}, 
+                l'inverse de $R$ est la relation $R^{-1}$ obtenue en interchangeant les éléments 
+                dans chaque paire ordonnée de $R$. 
+            \end{Definitionx}
+
+
+            \begin{EExample}{Relation inverse}{}
+                Soit $A = \{a, b, c\}$ et $b = \{1, 2, 3\}$, et supposons que $f$ est la \textbf{relation inverse} 
+                $f = \Bigl\{ (a, 2), (b, 3), (c, 1) \Bigr\}$ de $A$ à $B$. \textbf{Alors}, 
+                $f^{-1} = \Bigl\{ (2, a), (3, b), (1, c) \Bigr\}$ est la relation de $B$ à $A$ qui est 
+                la relation inverse de $f$. 
+            \end{EExample}
+
+            \begin{note}{}{}
+                $f$ est en fait une fonction de $A$ à $B$ et $f^{-1}$ est une fonction de $B$ à $A$. 
+            \end{note}
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.35\textwidth]{fonctionInverse.png}
+                \end{center}
+            \end{figure}
+
+
+            \begin{EExample}{Relation inverse}{}
+                Considérons $g = \Bigl\{ (a, 2), (b, 3), (c, 3) \Bigr\}$ de $A$ à $B$. \textbf{Alors}, 
+                $g^{-1} = \Bigl\{ (2, a), (3, b), (3, c) \Bigr\}$. Bien que $g$ est une fonction, 
+                $g^{-1}$ n'est pas une fonction, \textcolor{red}{\textit{parce que $g$ n'est pas \textbf{bijectif}}} 
+            \end{EExample}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.35\textwidth]{FonctionNonBij.png}
+                \end{center}
+            \end{figure}
+
+
+            \begin{Theorem}{}{}
+                Soit une \textbf{fonction}   $f : A \rightarrow  B$. \textbf{Alors}, $f$ est \textbf{bijective}
+                \textit{si et seulement si} la relation inverse $f^{-1}$ est une fonction de 
+                $B$ à $A$. 
+            \end{Theorem}
+
+
+            \begin{Theorem}{}{}
+                \textbf{Si} $f : A \rightarrow  B$ est \textbf{bijective}, \textbf{alors} son 
+                \textit{inverse} est la fonction $f^{-1} : B \rightarrow  A$. Les fonctions $f$ et $f^{-1}$ 
+                obéissent aux l'équations $f^{-1} \circ f = i_A$ et $f \circ f^{-1} = i_B$. 
+            \end{Theorem}
+
+
+            \begin{note}{}{}
+            Voir (faire) Exemples 17.12 et suite de 17.5 sur la même page \texttt{\small{\S Hammack chapitre 17.5}}
+            \end{note}
+
+
+
+    \chapter{Cardinalité des ensembles}
+
+
+            \begin{note}{}{}
+                Deux ensembles $|A|$ et $|B|$ peuvent être \textbf{infini} tout en étant tels que $|A| < |B|$  
+            \end{note}
+
+
+            \begin{Definitionx}{Cardinalité d'un ensemble}{}
+                Deux \textbf{ensembles} $A$ et $B$ ont la même cardinalité, $|A| = |B|$, s'il existe une fonction 
+                \textbf{bijective} telle que $f : A \rightarrow  B$. Si une telle fonction n'existe pas, 
+                \textbf{alors}, les ensembles sont de \textbf{cardinalité inégale}, c'est-à-dire 
+                $|A| \neq |B|$. 
+            \end{Definitionx}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.35\textwidth]{CardEnsemble.png}
+                \end{center}
+            \end{figure}
+
+
+            \begin{Definitionx}{Bijection}{}
+                Une \textbf{bijection} est une \textit{fonction bijective} qui permet de connecter $A$ à $B$ 
+                de façon bijective, c'est-à-dire $f : A \rightarrow  B$ est une bijection des 
+                ensembles $A$ et $B$. Similairement, une fonction \textit{injective} et \textit{surjective}
+                est appelée \textbf{injection} et \textbf{surjection} de $A$ et $B$, respectivement.     
+            \end{Definitionx}
+
+
+            \begin{Theorem}{Comparaison de $\mathbb{N} \; et \; \mathbb{Z}$}{}
+                Il existe une \textbf{bijection} $f : \mathbb{N} \rightarrow  \mathbb{Z}$. Par conséquent 
+                $|N| = |Z|$. 
+            \end{Theorem} 
+
+
+
+            \begin{table}[H]
+              \begin{center}
+                \renewcommand{\arraystretch}{1.5}
+                \fontfamily{flr}\selectfont
+                \footnotesize
+                    \begin{tabular}{l|l l l l l l l l l l}
+                    \arrayrulecolor{blue}\hline
+                    \rowcolor{lightBlue}
+                    \textcolor{myb}{$n$} & \textcolor{myb}{1} & \textcolor{myb}{ 2} & \textcolor{myb}{3} 
+                                                         & \textcolor{myb}{4} 
+                                       & \textcolor{myb}{5} & \textcolor{myb}{6} & \textcolor{myb}{7} 
+                                       & \textcolor{myb}{8} & \textcolor{myb}{9} & \textcolor{myb}{$\dots$}
+                    \\
+                    \hline
+                    \arrayrulecolor{black}
+                    $f(n)$ & 0 & 1 & -1 & 2 & -2 & 3 & -3 & 4 & -4 & \dots
+                    \\
+                    \hline
+                    \end{tabular}
+            \end{center}
+            \end{table}
+                    
+
+            \begin{Preuve}{}{}
+                Le tableau ci-haut montre que pour chaque élément de la bijection 
+                $ f : \mathbb{N} \rightarrow \mathbb{Z}$ permet de relier les ensembles 
+                $\mathbb{N}$ et $\mathbb{Z}$ de façon bijective. Chaque \textbf{entier} apparaît une seule fois 
+                sur le 2$^e$ rangée  et soit un entier $b \in \mathbb{Z}$ il existe un entier 
+                $a \in \mathbb{N}$ tel que $f(a) = b$. Nous savons aussi que tous les éléments de 
+                $x \in \mathbb{N}$ ont une image unique dans $\mathbb{Z}$ en appliquant, $f$; c'est-à-dire 
+                $(f(x) = f(y)) \implies x = y$. \textbf{Par définition}, $f$ est une 
+                bijection de $\mathbb{N}$ à $\mathbb{Z}$ et donc, nous pouvons conclure que 
+                $|\mathbb{N}| = |\mathbb{Z}|$. \qed
+            \end{Preuve}
+
+
+            \begin{Theorem}{}{}
+                 Il n'existe aucune \textbf{bijection} $f : \mathbb{N} \rightarrow  \mathbb{R}$. Par conséquent 
+                $|N| \neq |R|$. 
+               
+            \end{Theorem}
+
+
+    \section{Esembles comptables \texttt{\small{Hammack 18.2}}}
+
+
+            \begin{Definitionx}{Ensemble comptable}{}
+                Supposons que $A$ est un \textbf{ensemble}. \textbf{Alors}, $A$ est 
+                \textbf{dénombrablement infini} si $|\mathbb{N}| = |A|$, c'est-à-dire s'il existe 
+                une \textit{bijection} $\mathbb{N} \rightarrow A$. L'ensemble $A$ est 
+                \textbf{non dénombrable} si $A$ est infini \textbf{et} $|\mathbb{N}| \neq |A|$, c'est-à-dire 
+                $A$ est infini et il n'existe \textit{aucune} bijection $\mathbb{N} \rightarrow  A$.   
+
+            \end{Definitionx}
+
+
+            \begin{note}{}{}
+                $\mathbb{N}$ est dénombrablement infini mais $\mathbb{R}$ est non comptable.  
+            \end{note}
+
+
+            \begin{Definitionx}{}{}
+                La cardinalité de l'ensemble des entiers naturels est déonotée $\aleph_0$
+                C'est-à-dire $|\mathbb{N}| = \aleph_0$. \textbf{Ainsi}, tout les entiers 
+                dénombrablement infini ont une cardinalité $\aleph_0$. 
+            \end{Definitionx}
+
+
+            \begin{EExample}{}{}
+                Soit $E = \{ 2k : k \in \mathbb{Z} \}$, l'ensemble des entiers pairs. Nous savons que 
+                $f : \mathbb{Z} \rightarrow E$ définit par $f(n) = 2n$ est une \textbf{bijection} 
+                de $\mathbb{Z}$ à $E$. Par conséquent, $|\mathbb{Z}| = |E|$. Ainsi, 
+                $|\mathbb{N}| = |\mathbb{Z}| = |E|$. Donc l'ensemble $E$ est dénombrablement
+                infini. 
+            \end{EExample}
+
+
+            \begin{Theorem}{}{}
+                Un ensemble $A$ est dénombrablement infini \textit{si et seulement si} ses 
+                éléments peuvent être arrangé en une liste infinie $a_1, a_2, a_3, \dots$.
+            \end{Theorem}
+
+
+            \begin{EExample}{}{}
+                Soit $P$ l'ensemble des nombre premiers. Puisque nous pouvons lister ses éléments par 
+                $2, 3, 4, 5, 7, 11, 13, \dots$, il s'ensuit que $P$ est dénombrablement infini. \qed 
+            \end{EExample}
+
+
+            \begin{Theoremcon}{}
+                L'ensemble des nombre rationel, $\mathbb{Q}$ est dénombrablement infini. 
+            \end{Theoremcon}
+
+
+            \begin{Preuve}{}{}
+                Il suffit de lister ces éléments de la façon suivante. On considère un tableau où on liste 
+                d'abord tous les entiers dans $\mathbb{Q}$ en commençant à 0 et en alternant entre des valeurs 
+                positives et négatives par la suite. Les rangées suivantes contiennent les fractions irréductible 
+                de $\mathbb{Q}$. Pour chaque colonne, un entier $k$ forme le numérateur des fractions 
+                irrédutibles. La colonne $2$, par exemple, contient les fractions 
+                $\frac{2}{1}, \frac{2}{3}, \frac{2}{5}, \frac{2}{7}$, etc. Elle ne contient pas 
+                $\frac{2}{2}, \frac{2}{4}, \frac{2}{6}$, etc. puisque celles-ci sont réductibles et, d'ailleurs, 
+                cette quantité est compté par la première rangée contenant $k = 2, k = 4, k = 6$, etc. 
+                Nous pouvons ensuite former un chemin commançant à $\frac{0}{1}$ et serpentant à travers les 
+                colonnes et rangées. Ce chemin représente la liste des éléments de $\mathbb{Q}$ \qed
+            \end{Preuve}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.40\textwidth]{CompterQ.png}
+                \end{center}
+            \end{figure}
+            
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.40\textwidth]{Snakingpath.png}
+                \end{center}
+            \end{figure}
+
+            \begin{Theorem}{}{}
+                Si $A$ et $B$ sont tout deux dénombrablement inifini, \textbf{alors} $A \times B$ l'est également.
+            \end{Theorem}
+
+            \begin{Preuve}{}{}
+                Il est possible de tracer un chemin impliquant toutes les paires ordonées 
+                de $A \times B$, pourvu que $A$ et $B$ son dénombrablement. Ce chemin représente la 
+                liste des éléments de l'ensemble $A \times B$, ce qui fait que $A \times B$ est 
+                également dénombrablement inifini. \qed
+            \end{Preuve}
+
+
+            \begin{figure}[H]
+                \begin{center}
+                    \includegraphics[width=0.45\textwidth]{AtimesB.png}
+                \end{center}
+            \end{figure}
+
+            \begin{note}{}{}
+                Le \textbf{corollaire} du théorème précédent est que si $A_1, A_2, A_3,  \dots, A_n$ avec 
+                $n \geq 2$, le produit cartésien $A_1 \times A_2 \times A_3 \times \cdots \times A_n$ 
+                \textit{est également dénombrablement infini}. 
+            \end{note}
+
+
+            \begin{Theorem}{}
+                Si $A$ et $B$ sont tous deux dénombrablement infinit, \textbf{alors} $A \cup B$ est 
+                dénombrablement infini. 
+            \end{Theorem}
+
+            \begin{Preuve}{}{}
+                Supposons que $A$ et $B$ sont \textbf{tout deux dénombrablement infini}. Par le théorème précédent, 
+                on peut écrit $A$ et $B$ comme suit : 
+
+                \begin{align*}
+                    A = \{a_1, a_2, a_3, a_4 \cdots \} \\ 
+                    B = \{b_1, b_2, b_3, b_4, \cdots \}
+                \end{align*}
+                On peut alors arrangfer $A$ et $B$ dans \textbf{une seule} liste infinie comme suit 
+                                \[ A \cup B = \{a_1, b_1, a_2, b_2, a_3, b_3, a_4, b_4, \cdots \} \]
+
+
+                Nous pouvons construire cette liste en nous imposant la restriction de ne pas 
+                lister un élément deux fois, s'il appartient aux deux liste. La liste que nous formons 
+                ainsi \textit{liste} les éléments de l'ensemble $A \cup B$ et, ainsi, il s'ensuit que 
+                $A \cup B$ est dénombrablement infini. 
+
+            \end{Preuve}                
+
+
+            \section{Fonction incalculables \texttt{\small{\S Hammack 18.4}}}
+
+
+            \begin{Definitionx}{}{}
+                Un fonction est $f : \mathbb{N} \rightarrow  \mathbb{N}$ est dite  \textbf{calculable} 
+                s'il existe une procédure prenant \textbf{n'importe que naturel} $n \in \mathbb{N}$ 
+                comme entré et sortant $f(n)$.  
+            \end{Definitionx}
+
+
+            \begin{note}{}{}
+                Les fonctions $f(n) = n!$ et $f(n) = \texttt{Fib}(n)$ sont calculables, puisqu'elles 
+                \textbf{possèdent une procédure} qui prend $n \in \mathbb{N}$ et rejette un $f(n)$.  
+                \textbf{Or}, la plupart des fonctions $f : \mathbb{N} \rightarrow \mathbb{N}$ \textit{ne sont pas}
+                \textbf{calculables}.   
+            \end{note}
+
+
+            \begin{prop}{}{}
+                L'ensemble de \textbf{toutes les fonctions} $f : \mathbb{N} \rightarrow \mathbb{N}$  
+                \textbf{n'est pas} dénombrable (comptable).   
+            \end{prop}
+
+
+            \begin{prop}{}{}
+                 L'ensemble de \textbf{toutes les procédures possibles} est \textbf{dénombrablement} infini.     
+            \end{prop}
+
+
+            
+             \begin{prop}{}{}
+                Par la proposition précédente (7.2), l'ensemble de tous les programmes (ou procédures) qui peuvent 
+                être écrites dans un language de programmation donné est comptable. 
+             \end{prop}
+
+             \begin{Theorem}{}{}
+                 Il existe des fonctions qui ne sont pas calculables, c'est-à-dire qu'\textbf{elles ne peuvent pas}
+                 être calculé par une procédure (conséquence de 7.1, 7.2, 7.3).
+             \end{Theorem}
+      
+
+
+            
+
+\end{multicols*}
+
+\end{document}
