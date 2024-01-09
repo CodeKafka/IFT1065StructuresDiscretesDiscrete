@@ -1,0 +1,818 @@
+\documentclass[8pt]{report}
+\input{preamble.tex}
+
+
+
+
+\title{\Huge{Structures Discrètes}\\{IFT1065}\\{\textbf{Préparation à l'examen Intra}}}
+
+\author{\huge{Franz Girardin}}
+\date{\today}
+\lstset{inputencoding=utf8/latin1}
+%%%%%%%%%%%%%%%%%  Sect.                          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{helvet}
+\titleformat{\chapter}
+  {\fontfamily{phv}\bfseries\huge} % format
+  {}                % label
+  {0pt}             % sep
+  {\color{myb}\huge}           % before-code
+
+
+
+\titleformat{\section}
+  {\normalfont\scshape}{\thesection}{1em}{}
+
+
+% Customizing the spacing for the chapter titles
+\titlespacing*{\chapter}{0pt}{-5pt}{20pt}
+
+%\def\thesection{\alph{section}}
+\usepackage{mathpazo}
+\usepackage{nicematrix}
+\usepackage{lscape}
+\usepackage{rotating}
+\begin{document}
+\maketitle
+\pagebreak
+\tableofcontents
+\pagebreak
+
+
+
+
+
+
+%====================================================================
+
+%====================================================================
+
+
+\begin{multicols*}{2}
+\chapter{Introduction à théorie des ensembles}
+\section{Introduction aux ensembles}
+
+Les ensembles constituent le langage dans lequel les mathématiques modernes sont exprimées. La théorie des 
+ensembles formalise les opérations naturelles que l'on peut appliquer à des collections d'objets. 
+\begin{Definition}{Ensemble}{}
+    Un ensemble est un collection d'objets
+\end{Definition}
+\begin{Remarque}{}{}
+  L'ordre dans lequel apparaît les objets n'est pas important. Les ensembles ne sont définis que par 
+  les éléments distincts qu'ils contiennent. 
+\end{Remarque}
+
+\begin{EExample}{Égalité d'ensemble}{}
+  Soit les ensembles $A = \{ 1, 2, 3 \}$ et $B = \{ 3, 1, 2 \}$, on peut donc affirmer que $A = B$ 
+\end{EExample}
+\begin{Syntaxe*}{Opérateur |}{}
+  Les éléments d'un ensemble peuvent être donnés par des propriétés qu'il doivent satisfaire. Par exemple,
+  on peut définir l'ensemble $P$ grâce à l'opérateur $|$ : 
+  \begin{align*}
+      P = \{ x \; | \; x \text{ est un nombre premier}  \}
+  \end{align*}
+\end{Syntaxe*}
+\begin{Remarque}{Ensemble contenu}{}
+    Un ensemble peut contenir des ensembles : 
+    \begin{align}
+      B = \{ \{1, \pi, 3 \} \{4, 6, \pi\}\}
+    \end{align}
+
+\end{Remarque}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                Section : Ensembles connus                   %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Ensembles connus}
+\begin{Syntaxe}{Les ensembles particuliers}{}
+    L'ensemble des nombres premiers est définit par : 
+    \begin{align}
+      \mathbb{P} = \{2, 3, 5, 7, 11, 13, 17, 19, 23...\}
+    \end{align}
+    L'ensemble des entiers naturels non nuls est définit par :
+    \begin{align}
+      \mathbb{N}^* = \{ 1, 2, 3, 4, 5, ... \}
+    \end{align}
+    L'ensemble des entiers naturels positifs est définit par :
+    \begin{align}
+      \mathbb{N} = \{ \textbf{0}, 1, 2, 3, 4, \dots \}
+    \end{align}
+    L'ensemble des entiers non nuls est définit par :
+    \begin{align}
+      \mathbb{Z}^* = \{..., -3, -2, -1, 1, 2, 3, ...\} 
+    \end{align}
+    L'ensemble des entiers positifs et négatifs est définit par : 
+    \begin{align}
+      \mathbb{Z} = \{..., -3, -2, -1, \textbf{0}, 1, 2, 3, ... \}
+    \end{align}
+    L'ensemble des nombres rationnels est définit par $\mathbb{Q}$.
+    L'ensemble des nombres irrationnels est difnit par $\mathbb{Q}^{'}$.
+    L'ensemble des nombres réels est définit par $\mathbb{R}$.
+    L'ensemble des nombre complexes est définit par  $\mathbb{C}$. 
+\end{Syntaxe}
+
+\begin{Definition}{Nombre rationnel}{}
+  Est rationnel tout nombre pouvant être représenté comme le quotient de deux
+  nombres entiers où le \textbf{dénominateur est non nul}. Le développement décimal 
+  peut être fini ou infini et périodique, mais pas infini est non périodique. 
+  \begin{align}
+    \forall k : k = \frac{p}{q}, \; \; p \in \mathbb{Z}, \; \; q \in \mathbb{Z}  \implies k \in \mathbb{Q}
+  \end{align}
+\end{Definition}
+\begin{EExample}{Nombres rationnels}{}
+  Les nombres $0.75$, $-2.5$, et $-0.125$ peuvent sont rationnel. Ils peuvet être représenté,
+  respectivement, par : 
+  \begin{align*}
+    \frac{3}{4}\;, \; \; \frac{-5}{2}\;, \;\; \frac{-1}{8}
+  \end{align*}
+\end{EExample}
+
+
+\begin{Definition}{Nombre irrationnel}{}
+    Est irrationnel tous nombre pouvant être exprimé sous forme de quotient de deux 
+    nombres, mais dont le développement décimal est à la fois 
+    infini et non périodique 
+\end{Definition}
+
+\begin{EExample}{Nombre irrationnel}{}
+  $\pi$ est un nombre irrationnel. On peut approximer pi par une somme :
+  \begin{align*}
+  \pi \approx \lim_{{n \to \infty}} \sum_{{i=1}}^{n} \frac{1}{n} \cdot \frac{4}{1 + \left(\frac{i}{n}\right)^2}
+  \end{align*}
+\end{EExample}
+\begin{Definition}{Nombre réel}{}
+    Est réel tous nombre pouvant être représenté par un partie entière et une liste 
+    finie ou infinie de décimales. L'ensemble des réels est définit par :
+    \begin{align}
+      \mathbb{R} = \mathbb{Q} \cup \mathbb{Q}^{'}
+    \end{align}
+\end{Definition}
+\section{Introduction aux listes}
+
+\begin{Definition}{Liste}{}
+   Collection d'élément qui a un ordre et pouvant accepter des répétitions
+\end{Definition}
+
+\begin{Syntaxe}{Notation de liste}{}
+  On peut définir une liste comme suit :
+  \begin{align*}
+      \left(1,2,3 \right)
+  \end{align*}
+\end{Syntaxe}
+\begin{Remarque}{}{}
+    Deux listes sont égales si elles ont les même éléments dans le même ordre :
+    \begin{align*}
+    \left( 1, 2, 3\right) \neq \left( 3, 2, 1\right)
+    \end{align*}
+    Et si deux listes ne contiennent pas le même nombres d'éléments, alors elles ne sont pas 
+    les mêmes listes 
+\end{Remarque}
+\begin{EExample}{Différencier objets de type liste et ensemble}{}
+  1. $\left( \right)$, 2. $\left(\emptyset \right)$, 3. $\left( \{ \}\right)$
+  1. et 2. sont identiques 
+\end{EExample}
+
+\begin{Definition}{Produit cartésien}{}
+   L'ensemble des paires qui contient les éléments du premier ensemble et du $2^e$ ensemble est le 
+   produit cartésion de $A$ avec $B$ (noté $A \times B$)
+   \begin{align}
+     A \times B = \{ (a,b) \; | \;  a \in A \; \text{et} \; b \in B \}
+   \end{align}
+   
+\end{Definition}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.45\textwidth]{ProdCart.png}
+    \end{center}
+\end{figure}
+
+
+
+\section{Produit cartésien, ensemble puissance et appartenance}
+\begin{EExample}{Produit cartésien}{}
+  Soit $A = \{ 1, 2\}$ et $B = \{ x, y\}$. Le produit cartésien est :
+  \begin{align*}
+    A \times B = \{ (1,x), (1,y), (2,x), (2,y)      \}\\
+    B \times A = \{ (x,1), (x,2), (y,1), (y,2)      \} 
+  \end{align*}
+\end{EExample}
+
+
+\begin{note}{}{}
+  \begin{align*}
+    A \times B \neq B \times A \\ 
+    A \times B \times C \neq \left( A \times B \right) \times C
+  \end{align*}
+  Il faut respecter l'ordre de priorité des opérations du produit cartésien 
+\end{note}
+
+\begin{qstion}{Parenthèse}{}
+    Est-ce que $A \times B \times C$ = $\left(A \times B\right)$
+    \textbf{Réponse} : Non. %Todo Montrer 
+\end{qstion}
+
+\begin{Definition}{Sous-ensemble}{}
+  $A$ est un sous-ensemble de $B$ si tous les éléments de $A$ sont des éléments de $B$ : 
+  \begin{align*}
+              A \subseteq B
+  \end{align*}
+\end{Definition}
+\begin{note}{}{}
+    Un ensemble à $3$ éléments a $2^3$ sous-ensembles possibles. Donc, soit $n$, le nombre d'éléments 
+    d'une ensemble, il existe $2^n$ \textbf{sous-ensembles possibles}. Par ailleurs, 
+    l'ensemble vide est un sous-ensemble de n'importe quel ensemble, y compris lui-même. 
+
+\end{note}
+
+
+
+\begin{Definition}{Ensemble puissance}{}
+  L'ensemble puissance de $A$, $\mathcal{P}\left(A\right)$ est l'ensemble de tous les sous-ensembles possibles de $A$
+\end{Definition}
+
+
+
+
+\begin{Remarque}{Égalité de deux ensembles}{}
+    Deux ensembles sont égaux $A = B$ est équivalent à dire que $A \subseteq B$ et  
+    $B \subseteq A$ 
+  \end{Remarque}
+
+  \begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.45\textwidth]{EnsemblePuissance.png}
+    \end{center}
+    \caption{Arbre de décision pour construire l'ensemble puissance}
+\end{figure}
+
+Il est possible de trouver l'ensemble puissance en commançant par l'ensemble vide. Puisque tous les ensembles 
+contiennent au moins l'ensemble vide, construire l'ensemble puissance revient à déterminer si, pour 
+chaque entré de $A$, nous inclusion l'élément ou pas. 
+
+\chapter{Structures  discrètes élémentaires}
+
+\section{Opérations sur les ensembles}
+\begin{Definitionx*}{Union}{}
+  Soit deux ensembles $A = \{1, 2, 3,\}$ et $B = \{3, 4, 5\}$ on peut effectuer l'opération qui
+  consiste à prendre tous les éléments soit dans l'un soit dans l'autres :
+  \begin{align*}
+    A \cup B = \{1, 2, 3, 4, 5\}
+  \end{align*}
+  De façon plus \textbf{générale}, 
+  \begin{align*}
+      A_1\cup A_2\cup A_3\cup\cdots\cup A_n = \\
+      \{x \; |  x \in \textbf{\textit{au moins  un }}  A_i \; \forall \; 1 \leq i \leq n\}         
+  \end{align*}
+\end{Definitionx*} 
+\begin{Definitionx*}{Intersection}{}
+  L'intersection consiste à prendre uniquement les éléments qui se trouvent \textbf{à la fois} dans les 
+  les deux ensembles :
+  \begin{align*}
+    A \cap B = \{3\} \text{ \textbf{Puisque} } A \cup B = \{x \; | \; x \in A \; ou \;x \in B \}
+  \end{align*}
+    De façon plus \textbf{générale}, 
+  \begin{align*}
+    A_1\cap A_2\cap A_3\cap\cdots\cap A_n = \\ 
+    \{x \; | \; x \in \textit{\textbf{tous les ensembles} } A_i \; \forall \; 1 \leq i \leq n\}         
+  \end{align*}
+
+
+
+\end{Definitionx*}
+
+\begin{Definitionx*}{Différence}{}
+  La différence consiste à prendre tous les éléments dans le premier ensemble qui ne sont pas dans 
+  le second :
+  \begin{align*}
+    A - B = \{1, 2\} \text{ \textbf{Puisque} } A \cup B = \{x \; | \; x \in A \; et \;x \notin B\}
+  \end{align*}
+\end{Definitionx*} 
+
+\begin{EExample}{}{}
+  $\mathbb{R} - \mathbb{N}$ est l'ensemble des nombres dont la partie décimale n'est pas nulle 
+  ou qui sont négatrifs 
+\end{EExample}
+
+
+\begin{Definitionx*}{Le complément}{}
+    Le complément de $X$ par rapport à $U$ est définit si : 
+    \begin{align*}
+      X \subseteq U \text{ comme } U - X        
+    \end{align*}
+\end{Definitionx*}
+
+\begin{Concept}{Univers ou ensemble universel}{}
+    Lorsqu'on discute d'un ensemble, on en parle presque toujours en référence à un autre ensemble. Par exemple, 
+    lorsqu'on parle de l'ensemble des nombres premiers $P$ :
+    \begin{align*}
+      P = \{ 2, 3, 5, 6, 11, 13, ... \} 
+    \end{align*}
+    on en parle presque toujours en référence à un ensemble qui le contient, par exemple, $P \subseteq \mathbb{N}$.
+    Ainsi, on dit que le plus grand ensemble est un \textbf{ensemble universel}. Il s'agit de l'ensemble auquel 
+    on se réfère pour décrire certaines caractéristiques de $P$. On dit alors que $\mathbb{N}$ est 
+    \textbf{l'univers} de $P$.
+\end{Concept}
+
+\begin{Definitionx*}{}{}
+  Soit $A$, un ensemble ayant un comme \textbf{univers} $U$, le \textbf{complément} de $A$ dénoté $\overline{A}$ 
+  est l'ensemble :
+  \begin{align*}
+    \overline{A} = U - A 
+  \end{align*}
+\end{Definitionx*}
+
+\section{Union et intersection itéré}
+\begin{Syntaxe}{Union de plusieurs ensembles}{}
+  Soit les ensembles $A_1, A_2, A_3,..., A_n$, on définit \textbf{l'union de ces ensembles} comme suit : 
+    \begin{align*}
+      \bigcup_{i=1}^n A_i = A_1\cup A_2 \cup A_3 \cup \cdots \cup A_n 
+    \end{align*}
+  Par ailleurs, on définit \textbf{l'intersection de ces ensembles} comme suit :
+  \begin{align*}
+      \bigcap_{i=1}^n A_i = A_1\cap A_2 \cap A_3 \cap \cdots \cap A_n 
+  \end{align*}
+\end{Syntaxe}
+
+\chapter{Combinatoire}
+\section{Principe de multiplication (Hammack \S 4.2)}
+\begin{Concept}{Description du principe de multiplication}{}
+    Lorsqu'on veut construire un liste de longueur $n$ et qu'il y a $a_1$ choix possibles pour la première entrée, 
+    $a_2$ choix possibles pour la secondes entrée, $a_3$ choix possible pour la troisièmes entrée et ainsi de suite. 
+    Alors, \textbf{le nombre total de listes différentes} qui peuvent être construites est le produit :
+    $a_1 \cdot a_2 \cdot a_3 \cdot \cdots a_n$. \\\\ 
+    Autrement dit, le \textbf{nombre de listes} faisables à travers un processus spécifique est le produit 
+    du \textbf{nombre de choix} pour chaque entrée.   
+\end{Concept}
+\begin{EExample}{Application du principe de multiplication (Hammack 4.1)}{}
+    Une plaque d'immatriculation standard comprend trois lettres suivies de quatre nombres, par exemple 
+    $JRB-4412$. Combien de plaque d'immatriculation standard différentes existe-t-il ? \\\\
+    Il y a $26$ choix possibles—correspondant aux $26$ lettres de l'alphabet—pour le premier caractère, 
+    $26$ choix pour le second et $26$ choix pour le troisième. Par ailleurs, il y a 10 nombres possibles pour 
+    le $4^e$, $5^e$, $6^e$ et $7^e$ caractère. Soit $A$, l'ensemble des plaques d'immatriculation, nous avons :
+    \[ |A| = 26 \cdot 26 \cdot 26 \cdot 10 \cdot 10 \cdot 10 \cdot 10 \]
+\end{EExample}
+
+\begin{EExample}{Application du principe de multiplication (Hammack 4.2)}{}
+    En commandant un café, vous avez le choix entre du lait écrémé, du lait $2\%$ et du lait d'avoine; 
+    un gobelet moyen ou large; et soit une ou deux doses d'espresso. Combien de boisson possibles 
+    pouvez-vous commander selon les choix disponibles ? \\\\ 
+    On a $3$ choix de lait, $2$ choix de gobelet et $2$ choix de dose d'espresso. Soit $B$, l'ensemble des 
+    choix de boisson possibles, on a :
+    \[ |B| = 3 \cdot 2 \cdot 2 = 18 \]
+\end{EExample}
+
+\section{Dénombrement de permutations}
+
+\begin{table}[h]
+  \caption {Permutations possibles selon le $n \in \mathbb{N}$ }
+
+  \begin{center}
+    \renewcommand{\arraystretch}{1.5}
+    \fontfamily{flr}\selectfont
+    \footnotesize
+    \begin{tabular}{l|l|p{10cm}|l}
+    \arrayrulecolor{blue}\hline
+    \rowcolor{lightBlue}
+    \textcolor{myb}{$n$} & \textcolor{myb}{Symboles} & \textcolor{myb}{Permutations de liste de longueur n} & \textcolor{myb}{$n!$}
+    \\
+    \hline
+    \hline
+    \arrayrulecolor{black}
+    0 & $\{ \}$ & $()$  & 1  
+
+    \\
+    \hline
+    1 & $\{a\}$ & a & 1 
+    \\
+    \hline
+
+    2 & $\{a, b\}$ & $ab,\;\; ba$ & 2 
+    \\
+    \hline
+    3 & $\{a, b, c\}$  & $abc,\;\; acb,\;\; bac,\;\; bca \;\; cab, \;\; cba$ & 6 
+    \\
+    \hline 
+    4 & $\{ a, b, c, d\}$ &  \textit{abcd, \;\; acbd, \;\; bacd, \;\; bcad, \;\; cabd, \;\;cabd,    
+              addc, \;\; acdb, \;\; badc, \;\; bcda, \;\; cadb, \;\; cbda,   
+              bacd, \;\; badc, \;\; bdac, \;\; dbac, \;\; adbc, \;\; adcb,   
+    dabc, \;\; dacb, \;\; dbac, \;\; dbca, \;\; dcab, \;\; dcba}  & 0 
+    \\ 
+    \hline 
+    \vdots & \vdots & \vdots & \vdots 
+    \\
+    \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{Definitionx*}{}{}
+  Si $n \in \mathbb{Z}^*$, alors $n!$ est le nombre de listes de longueur $n$ qui peuvent etre obtenues à partir de $n$ 
+  symboles, sans répétition.  Ainsi, $0! = 1$ et $1! = 1$. Si $n > 1$, alors 
+  $n! = n\left(n-1\right) \left(n-1\right)\cdots 3 \cdot 2 \cdot 1$.
+\end{Definitionx*}
+
+\section{Principe d'addition (Hammack \S 4.3)}
+\begin{Definitionx*}{Principe d'addition}{}
+  Supposons un ensemble fini $X$ qui peut être décomposé en union
+  $X = X_1 \cup X_2 \cup \cdots \cup X_n$, où $X_i \cap X_j = \emptyset$ \textbf{lorsque}
+  $i \neq j$. \textbf{Alors}  , 
+  \begin{align*}
+              |X| = |X_1| + |X_2| +\cdots+ |X_n|
+  \end{align*}
+\end{Definitionx*}
+
+\begin{note}{}{}
+    Le \textcolor{myb}{principe d'addition} affirme que si un ensemble peut être 
+    décomposé en morceaux, la taille de cet ensemble est \textbf{la somme des tailles 
+    de ses morceaux}.    
+\end{note}
+
+\section{Principe de soustraction (Hammack \S 4.3)}
+\begin{Definitionx*}{Principe de soustraction}{}
+    Si $X$ est un sous-ensemble d'un ensemble fini $U$, \textbf{alors} :
+    \begin{align*}
+      |\overline{X}| = |U| - |X|. 
+    \end{align*}
+    En d'autres mots, si $X \subseteq U$, \textbf{alors}   $|U - X| = |U| - |X|$
+\end{Definitionx*}
+
+\section{Factoriels et permutations}
+\begin{Definitionx*}{Factoriel}{}
+    Si $n$ est un \textbf{entier non négatif}, alors $n!$ is le nombre de \textcolor{red}{\textit{listes}}
+    non répétitives de longueur $n$ qui peuvent être obtenues à partir de $n$ symbols. Et nous avons :
+    \[ n! = n \cdot (n-1)! \]
+\end{Definitionx*}
+
+
+\begin{Definitionx*}{{Permutation}}{}
+    Une \textbf{permutation} est un arrangement (listé) sans répétition de tous les éléments d'un ensemble. Autrement 
+    dit, tous les arrangement sans répétition possibles d'une liste sont des permutations de cette liste. Une liste 
+    de longueur $n$ a donc $n!$ différentes permutations.
+\end{Definitionx*}
+
+Le corollaire de cette définition est le fait que $0! = 1$ puisque qu'on peut faire uniquement 1 liste de longueur 
+$n=0$ en choisissant $n=0$ symbols, soit la liste vide, ().
+
+
+\begin{Definitionx*}{{k-Permutation}}{}
+    Une \textbf{k-permutation} de $X$ est le nombre de listes non répétitives qu'on peut obtenir en choisissant 
+    $k$ éléments parmi la liste $X$. Et l'expression $P(n, k)$ dénote le nombre de k-permutations
+    d'une liste de $n$ éléments.
+                                    \[ P(n, k)= n(n-1)(n-2)\cdots(n-k+1) \]
+    Si $0 \leq k \leq n$, alors $P(n, k) = \dfrac{n!}{(n-k)!}$
+    
+\end{Definitionx*}
+
+\section{Dénombrement de sous-ensembles (\S Hammack 4.5)}
+
+\begin{note}{}{}
+    Le \textcolor{myb}{principe de multiplication} s'applique lorsqu'on veut déterminer quelle quantité 
+    de \textbf{listes} de taille $n$ on peut construire en sélectionnant $k$ entrées d'un 
+    ensemble comprenant $n$ éléments. \\\\ 
+
+    La méthode de  \textcolor{myb}{dénombrement de sous-ensembles} permet de déterminer 
+    le \textbf{nombre de sous-ensembles} il est possible d'obtenir en sélectionnant $k$ 
+    éléments d'un ensembles de taille $n$
+\end{note}
+
+\begin{EExample}{Principe de multiplication vs Dénombrement de sous-ensemble}{}
+  Soit un ensemble $A = \{a, b, c, d, e\}$, le nombre de listes différentes qu'on peut 
+  obtenir en sélectionnant $k = 2$ éléments de $A$ est donné par : 
+  \begin{center}
+      $N_{total} = 5 \times 4 = 20$
+  \end{center}
+  Et les listes sont : 
+  \begin{center}
+  $(a, b), (a, c), (a, d), (a, e),$ \\ 
+  $(b, c), (b, d), (b, e), (c, d),$ \\ 
+  $(c, e), (d, e), (b, a), (c, a),$\\ 
+  $(d, a), (e, a), (c, b), (d, b),$\\ 
+  $(e, b), (d, c), (e, c), (e, d)$
+  \end{center}
+  Par contre, il existe \textbf{uniquement $10$}   sous-ensembles de $A$, soit :
+  \begin{center}
+    $\{a, b\}, \{a, c\}, \{a, d\}, \{a, e\}, \{b, c\}, \{b, d\}, \{b, e\}, \{c, d\}, \{c, e\}, \{d, e\}$
+  \end{center}
+\end{EExample}
+
+\begin{Definition}{Définition de $C(n, k)$}{}
+  Si $n, k \in \mathbb{N}$, alors ${n \choose k}$ dénote \textbf{le nombre de sous-ensembles}   qui peuvent être obtenus en choisissant $k$ éléments d'un ensemble de taille $n$. On lit ${n \choose k}$ « $n$ choisit $k$ ». 
+\end{Definition}
+
+\begin{Theorem}{}
+  Si $0 \leq k \leq n$, \textbf{alors}, ${n \choose k} =  \dfrac{n!}{k!(n-k)!}$. 
+  \textbf{Autrement}, ${n \choose k} = 0$. 
+\end{Theorem}
+
+\section{Triangle de Pascal et théorème binomial (\S Hammack 4.6)}
+
+\begin{Concept}{Formule du triangle de Pascal}{}
+  $\forall n, k \in \mathbb{Z}^* \; | \; 1 \leq k \leq n$, on a la relation suivante 
+  entre les nombres : 
+  \begin{align*}
+    { n + 1\choose k} = {n \choose k -1} + {n \choose k}       
+  \end{align*}
+\end{Concept}
+
+\begin{Theorem}{}{}
+  $(x+y)^n = {n \choose 0}x^n + {n \choose 1}x^{n-1}y+ {n \choose 2}x^{n-2}y^2 + 
+  {n \choose 3}x^{n-3}y^3 +\cdots+ {n \choose n-1}xy^{n-1} + 
+  {n \choose n}y^n$
+  \begin{center}
+    $$(x+y)^n = \sum_{i=0}^{n}{n \choose i}x^{n-i}y^i$$
+  \end{center}
+\end{Theorem}
+
+\section{Inclusion-exclusion (\S Hammack 4.7)}
+\begin{Definitionx*}{Principe d'inclusion-exclusion}{}
+    Si $A$ et $B$ sont des ensembles finis, \textbf{alors} $|A \cup B| =  |A| + |B| - |A \cap B|$ 
+\end{Definitionx*}
+
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.30\textwidth]{InclusionExclusio.png}
+    \end{center}
+\end{figure}
+
+\begin{Definitionx*}{Inclusion-Exclusion sur trois ensembles}{}
+    Nous pouvons appliquer le principe sur une multitude d'ensembles : 
+    \begin{align*}
+             |A \cup B \cup C| =  \\ 
+                            & |A| + |B| + |C| - |A \cap B| - |A \cap C| - \\ 
+                            & |B \cap C| - |A \cap B \cap C|
+    \end{align*}
+\end{Definitionx*}
+    \begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.25\textwidth]{InclEx.png}
+    \end{center}
+\end{figure}
+
+\section{Dénombrement avec répétition (\S Hammack 4.8)}
+
+\begin{EExample}{}{}
+    Supposons qu'on ait un sac de $5$ boules rouges $R$, et $2$ boules noirs ($N$),
+    comment pouvons-nous modéliser cette situtation, sachant que 
+    \begin{enumerate}
+        \item Il n'y a pas d'ordre sur les boules
+        \item Il n'y a pas de répétition—les boules d'une même couleur sont indistinguables. 
+    \end{enumerate}
+    Pour représenter la situtation on écrit alors : 
+    \begin{center}
+    $ \left[ R, R, R, R, R, N, N \right] $
+    \end{center}
+\end{EExample}
+
+\begin{Definitionx*}{Multi-ensemble}{}
+   Un multi-ensemble est une collection d'objets sans ordre particulier qui peuvent être 
+   répétés. Le cardinal d'un multi-ensemble est le nombre d'objets des multi-ensemble, incluant les 
+   répétitions. 
+\end{Definitionx*}
+
+\begin{Definitionx*}{}{}
+    La multiplicité de $x \in A$ est le nombre de répétitions $x$ dans le multi-ensemble $A$ 
+    \[ |A|_x \]
+\end{Definitionx*}
+\begin{note}{}{}
+    Un ensemble est un cas particulier d'un multi-ensemble; il s'agit d'un multi-ensemble 
+    où la multtiplicité de chaque élément est de $1$ : 
+    \[ \{1, 2, 3\} = \left[1, 2, 3\right]\] 
+    Cependant, 
+    \[  \{1, 2, 3\} \neq \left[1, 2, 2, 3 \right] \text{ et } \emptyset = \left[ \;\right] \] 
+\end{note}
+
+\begin{EExample}{}{}
+    Soit un sac avec des boules de trois couleurs différents (r, n, b), le multi-ensemble 
+    représentant cette situation est donné par : 
+    \[\left[ R, R, R, N, N, N, B, B, B \right]\]
+    \textcolor{red}{\textbf{Question}} Combien y a-t-il de résultats possibles ?
+    \begin{align*}
+        \left[R, R, R \right] \; et \; \left[R, R, N \right] \\
+        \left[R, N, N \right] \; et \; \left[R, N, B \right] \\
+        \left[R, B, B \right] \; et \; \left[N, N, N \right] \\
+        \left[N, N, B \right] \; et \; \left[N, B, B \right] \\
+        \left[B, B, B \right] \; et \; \left[R, R, B \right]
+    \end{align*}
+\textcolor{red}{\textbf{Stratégie}} \\
+    On peut lister les multi-ensembles possibles en s'assurant d'écrire les 
+    $R$ avant les $N$ et les $N$ avant $B$. etc ... \\
+    En plaçant deux séparateurs entre les emplacements, on obtient : 
+    \[ {5 \choose 2} \]
+    Plus généralement, le nombre de multi-ensemble de $k$ éléments à partir d'un ensemble de $n$ 
+    éléments est donné par : 
+    \[ {{k+ n -1} \choose {n-1} } \]
+    où $k$ représente la taille des multi-ensembles et $n$ le nombre de types d'objets. 
+
+\end{EExample}
+
+\begin{Definitionx*}{}{}
+   Le nombre de \textbf{multi-ensembles} de  \textbf{k-éléments} qui peuvent être formé à partir 
+   d'un ensemble de $n$ éléments $X = \{x_1, x_2, \dots, x_n \}$ est : 
+   $ {k+n-1}\choose {k} $ $=$ ${k+n-1}\choose{n-1}$
+   Cela fonction parce que n'importe quel multi-ensembles de \textbf{k-éléments} fait à partir de 
+   $n$ éléments de $X$ est encodé en une liste d'\textit{étoiles} et de \textit{barres} de taille 
+   $k+n -1$ ayant la forme : 
+
+
+   \begin{table}[H]
+     \begin{center}
+       \renewcommand{\arraystretch}{1.5}
+       \fontfamily{flr}\selectfont
+       \footnotesize
+           \begin{tabular}{l l l l l}
+               \textit{ chaque $x_1$} & \textit{chaque $x_2$} 
+                              & \textit{chaque $x_1$}
+                              & & \textit{chaque $x_n$}
+            \\
+               $\overbrace{*\;\;*\;\;*\;\;*}|$ & $\overbrace{*\;\;*\;\;*\;\;*}|$ 
+                                               & $\overbrace{*\;\;*\;\;*\;\;*}|$ 
+                                               & $\cdots \; \cdots  |$ 
+                                               & $\overbrace{*\;\;*\;\;*\;\;*}$
+           \\
+           \end{tabular}
+   \end{center}
+   \end{table}
+   La liste encodé a la taille $k+n -1$ puisqu'il y a $k$ étoiles et $n-1$ barres qui séparent les 
+   $n$ groupements d'étoiles. Une tele liste peut être obtenue en sélectionnant $n-1$ \textbf{positions}
+   \textcolor{red}{\textit{parmi}} $n+k-1$  pour les barres, en remplissant les positions restantes 
+   avec les étoiles. \textbf{Alternativement}, on peut sélectionner $k$ positions d'étoiles
+   \textcolor{red}{\textit{parmi}} $k+n-1$ et remplir les positions restantes avec les barres. 
+
+   les barres 
+\end{Definitionx*}
+
+\begin{Concept}{Pigeonnier}{}
+Si $n$ objets sont placés dans $k$ cases tel que $n > k$, il y a forcément au moins une case 
+qui contient plus d'un objet. 
+\end{Concept}
+
+\section{Principe de division (\S Hammack 4.9)}
+        \paragraph{}
+        Si $n$ \textbf{pigeons} vivent dans $k$ \textbf{boîtes} $(n \neq k)$, $k$ boîtes pourraient             
+        être \textcolor{red}{\textit{vides}} et $k$ \textbf{boîtes} pourraient contenir plus d'un pigeon. 
+        Le nombre moyen de pigeons par boîte est $\frac{n}{k}$. 
+        
+        \paragraph{}
+        Par la définition d'une moyenne, 
+        au moins une boîte doit contenir plus de $\frac{n}{k}$ pigeons et au moins une boîte doit contenir 
+        moins de $\frac{n}{k}$ pigeons. Et parce qu'une boîte doit contenir un 
+        \textcolor{red}{\textit{nombre entier}} de pigeons, on arrondit en disant qu'au moins une boîte 
+        contient  $\lceil \frac{n}{k} \rceil$ pigeons ou plus. Par ailleurs, au moins  une boîte 
+        contient  $\lfloor \frac{n}{k} \rfloor$ pigeons ou moins. 
+
+\begin{Definitionx*}{Principe de division}{}
+    Supposons que nous plaçons $n$ objets dans $k$ boîtes. Alors, au moins une boîte
+    contient $\lceil \frac{n}{k} \rceil$ objets ou plus. Et au moins une boîte contient  
+    $\lfloor \frac{n}{k} \rfloor$ pigeons ou moins
+\end{Definitionx*}
+
+\begin{Definitionx*}{Principe du Pigeonnier}{}
+    Supposons que $n$ objets sont placés dans $k$ boîtes, \textbf{alors}, si $n > k$, il y a au moins une 
+    boîte qui contient plus d'un objet. Si $n < k$ il y a au moins une boîte qui est vide. 
+\end{Definitionx*}
+\begin{EExample}{Classe}{}
+    S'il y a $n \geq 60$ personnes dans l'auditoire, et que $k \leq 30$ jours dans un mois,
+    par le principe du pigeonnier, on peut dire qu<il y a au moins deux personnes qui ont 
+    le même jour de naissance. 
+\end{EExample}
+
+\begin{EExample}{pigeonnier et compression sans perte}{}
+    Un fichier est simplement une liste de bits finie. Par ailleurs, un algorithme de compression 
+    associe à chaque fichier un fichier unique. Le fichier résultant doit être unique.  \\\\
+    Tout algoritme de compression compresse au moins un des fichiers en un fichier au moins aussi long.
+    \\\\
+    Soit $F_k$ l'ensemble des fichiers de $k$ bits, on a 
+    \[ |F_k| = 2^k\]
+    Soit $F_{<k}$ l<ensemble des fichiers de longueur $< k$, on a :
+    \begin{align*}
+             |F_{<k}| = |F_0 \cup F_1 \cup F_2 \cdots F_{k-1}| =       
+    \end{align*}
+    Si l'algorithme compressait tous les fhichier en des fichiers plus petits, il associeraient 
+    à chacun des $2^k$ fichier de $F_k$ l'un des $2^{k-1}$ fichiers de $F_{<k}$. \\\\
+    Par le principe du pigeonnier, au moins deux fichiers seraient compressés en le même fichier. Donc,
+    un tel algorithme ne peut pas exister. 
+\end{EExample}
+
+\chapter{Probabilités discrètes} 
+
+            
+
+        \section{Probabilité d'évènement (\S Hammack 5.1)}
+        \begin{Definitionx}{Expérience}{}
+            Une \textbf{expérience} est une activité qui produit un des différents résultats possibles qui 
+            ne peut pas être déterminé à l'avance. 
+        \end{Definitionx}
+        \begin{Definitionx*}{Univers de probabilité}{}
+            L'ensemble des résultats possibles à une expérience est appelé \textcolor{red}{\textit{l'univers}}
+            , noté $U$. Pour une expérience de lancé de dées 6 face, on a :
+                                \[ U = \{1, 2, 3, 4, 5, 6 \} \] 
+        \end{Definitionx*}
+        \begin{Definitionx}{Evènement}{}
+                Un évènement E est un sous-ensemble $E \subseteq U$ de résultats possibles. Par exemple, 
+                $p = \{ 2, 4, 6 \}$. L'évènement se porduit si le résultat de \textbf{l'expérience} 
+                apartient à $E$
+        \end{Definitionx}
+
+        \begin{Definitionx}{Probabilité}{}
+            La \textbf{probabilité d'un évènement} $E$ est notée $P(E)$. Il s'agit de chances que l'évènement 
+            se produise lorsqu'une expériuence est effectuée. 
+            Si \textbf{tous} les résultats ont les 
+            mêmes chances de se produire, \textbf{alors}, 
+            \[ p(E) = \dfrac{|E|}{|U|} \]
+        \end{Definitionx}
+
+        \begin{EExample}{}{}
+                On lance maintenant deux dés à $4$ faces l'un après l'autre. Quelle est la probabilité d'obtenir au 
+                moins \textbf{un}   $2$ ?
+                \[ U = Y \times Y  \]
+              \begin{center}
+              $\Big\{(1, 1), (1, 2), (1, 3), (1, 4),$ \\ 
+              $(2, 1), (2, 2), (2, 3), (2, 4),$ \\ 
+              $(3, 1), (3, 2), (3, 3), (3, 4),$\\ 
+              $(4, 1), (4, 2), (4, 3), (4, 4) \Bigr\}$
+              \end{center}
+            Soit $D_2$ le fait d'obtenir a moins 2, on  a 
+            $D_2 = \{ (a,b) \in U\;\; | \;\; a = 2 \text{ ou } b = 2 \}$  
+            \[ P(D_2) = \dfrac{|D_2|}{|U|} = \dfrac{7}{16} \]
+        \end{EExample}
+
+
+
+        \section{Unions d'évènements (\S Hamnack 5.2)}
+
+        \begin{Definitionx}{Occurence}{}
+            En général, si $A$ et $B$ sont des évènement du même univers, \textbf{alors} 
+            \textcolor{red}{$A \cup B$} est l'évènement où $A$ \textbf{ou} $B$ se produisent tout deux. 
+            \textcolor{red}{$A \cap B$} est l'évènement où $A$ \textbf{et}  $B$ se produisent 
+            simultanément. \textcolor{red}{$\overline{A}$} est l'évènement où $A$ \textbf{ne se produit pas}.     
+        \end{Definitionx}
+
+                \begin{note}{}{}
+                    Lorsque l'intersection de deux évènements engendre un ensemble vide, $A \cap B = \emptyset$, 
+                    cela veut dire que les évènements sont incompatibles. On peut aussi dire qu'ils sont 
+                    \textcolor{red}{\textit{mutuellement exclusifs}}.   
+                    \[ P(A \cup B) = P(A) + P(B) \]
+                \end{note}
+
+
+        \noindent Si on a deux évènements $A$ et $B$, l'évènement $A \cup B$ se produit si $A$ ou  ou $B$ se
+        produit. En applicant le principe \textbf{d'inclusion exclusion}, on a : 
+                \begin{align*}
+                 P(A \cup B) = \dfrac{|A \cup B|}{|U|} \\ 
+                = \dfrac{|A|}{|U|}+ \dfrac{|B|}{|U|} - \dfrac{|A - B|}{|U|} \\ 
+                = P(A) + P(B) - P(A \cap B)
+                \end{align*}
+
+        
+        \begin{Definitionx}{Évènement de non occurence}{}
+            Similairement, on peut déterminer la probabilité d'un évènement de non occurence :
+            \begin{align*}
+                p(\overline{A}) = \dfrac{|\overline{A}|}{|U|} = \dfrac{|U - A|}{U} 
+                                = \dfrac{|U|}{|U|} - \dfrac{|A|}{|U|}  
+                                \\ =  1 - \dfrac{|A|}{|U|} = \textcolor{red}{1 - p(A)}
+            \end{align*}
+        \end{Definitionx}
+
+
+
+        
+        \section{Probabilité conditionnelle (\S Hammack 5.3)}
+
+        
+        \begin{Definitionx}{Probabilité conditionnelle}{}
+            Si $A$ et $B$ sont deux évènements dans le même univers, la 
+            \textbf{probabilité conditionnelle de A sachan B}, écrit $P(A|B)$, est la probabilité 
+            que $A$ survienne si $B$ est déjà survenu. 
+        \end{Definitionx}
+
+
+    \begin{Definitionx}{Indépendance}{}
+        Deux évènement sont \textbf{indépendant} si l'occurence de l'un ne change pas la probabilité 
+        d'ocurrence de l'autre. Autrement dit :
+        \[ p(A) = p(A|B), p(B) = p(B|A) \]
+        Autrement, les deux évènements sont \textbf{dépendants}.   
+    \end{Definitionx}
+
+
+    \begin{Concept}{Probabilité conditionnelle}{}
+        Supposons que $A$ ET $b$ sont des évènements dans le même univers. \textbf{Alors} : 
+        \begin{enumerate}
+            \item $p(A|B) = \dfrac{p(A \cup B)}{p(B)}$
+            \item $p(B|A) = \dfrac{p(A \cup B)}{p(A)}$
+            \item $p(A \cap B) = p(A|B)\cdot p(B) = p(A)\cdot p(B|A)$ 
+            \item $p(A \cap B) = p(A)\cdot p(B)$ \dotfill si A et B sont \textbf{indépendant}.   
+        \end{enumerate}
+    \end{Concept}
+
+    \section{Bayes (\S Hammack 5.5)}
+    Supposons qu'un univers $U$ est divisé en deux sous univers tel que $U = U_1 \cup U_2$
+    et $U_1 \cap U_2 = 0$, et il existe un évènement $E \subseteq U$. 
+    La loi de Baye's permert de déterminer la probabilité que $U_1$ survienne si $E$ est survenu 
+    \[ p(U_1|E)= \dfrac{p(U_1)\cdot p(E|U_1)}{p(U_1)\cdot p(E|U_1)+p(U_2)\cdot p(E|U_2)}\]
+
+    \[ p(U_2|E)= \dfrac{p(U_1)\cdot p(E|U_2)}{p(U_1)\cdot p(E|U_1)+p(U_2)\cdot p(E|U_2)}\]
+
+\end{multicols*}
+\end{document}
