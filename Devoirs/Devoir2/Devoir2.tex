@@ -1,0 +1,1080 @@
+\documentclass[16pt]{report}
+\input{preamble.tex}
+\usepackage[scr]{rsfso}
+
+
+\title{\Huge{Structure Discrète}\\{IFT1065}\\{\textbf{Devoir 2}} \\ {Récursivité et Preuves}}
+\author{\huge{Franz Girardin et Aiya Ben Ouhida}}
+\date{\today}
+\lstset{inputencoding=utf8/latin1}
+
+            %%%%%%%%%%%%%%%%%  Sect.                          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{helvet}
+\titleformat{\chapter}
+  {\fontfamily{phv}\bfseries\huge} % format
+  {}                % label
+  {0pt}             % sep
+  {\color{myb}\huge}           % before-code
+
+
+
+\titleformat{\section}
+  {\normalfont\scshape}{\thesection}{1em}{}
+
+
+% Customizing the spacing for the chapter titles
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+\usepackage{mathpazo}
+\begin{document}
+\maketitle
+
+\pagebreak
+\begin{multicols*}{2}
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
+
+    \chapter{Résolution de problèmes}
+
+    \section*{Problème 1 $\quad$ $\cdot$  $\quad$ Divisibilité}
+    \begin{enumerate}
+        \item Montrez que $a$ divise $b$ si et seulement si $an$ divise $bn$. Reformulez la proposition
+        en langage logique, puis écrivez sa preuve en explicitant chaque technique utilisée.
+    \end{enumerate}
+
+    Soit le proposition $P(a, b, n) : a $ divise $b$ \textbf{si et seulement si} $an$ divise $bn$, 
+    nous pouvons réécrire $P(a, b, n)$ en language logique de la façon suivante :
+    \[ P(a,b,n) \Coloneqq a|b \Leftrightarrow  an|bn \]
+
+    Nous savons qu'une telle proposition biconditionnelle est une synthèse de \textbf{propositions conditionnelles}
+    distinctes que nous appellerons $P_r$ et $P_s$ :
+
+    \begin{align}
+              &P_q \Coloneqq a|b \implies  an|bn \\ 
+              &P_r \Coloneqq an|bn \implies a|b
+    \end{align}     
+    \paragraph{}
+    \textbf{Pour montrer la véracité de $P(a,b,c)$}, nous allons donc montrer que $P_q$ et $P_r$ sont vrais. 
+    
+    \begin{prop}{($P_q$)}{}
+        \[ a|b \implies  an|bn \]
+    \end{prop}
+    
+    \begin{Preuve*}{($P_q$)}{}
+        Nous allons montrer $P_q$ par \textcolor{red}{\textit{preuve directe}}.    
+        Supposons que $a$ divise $b$. \textbf{Par définition}, cela signifie qu'il existe un nombre 
+        $c \in \mathbb{Z}$ tel que 
+        \textcolor{myb}{$b = ac$}. Et, trivialement, $bn = acn$ Nous avons alors : 
+        \begin{align*}
+            an|bn &\equiv an|\textcolor{myg}{(ac) \cdot n} \\
+                        &\equiv an|(an) \cdot c \\
+                        &\equiv an|an \cdot c
+        \end{align*}
+        Autrement dit, si $an$ divise \textcolor{myg}{$(an)\cdot  c$}, 
+        cela veut dire qu'il existe un nombre $d \in \mathbb{Z}$ tel que 
+        $an \cdot d = an \cdot c$. D'une part, cela implique  que $d = c$. 
+        Par ailleurs, nous constatons que $bn$ est un multiple de $an$, car $bn$ peut être exprimé comme 
+        $an$ multiplié par un entier $c$. Par conséquent, nous concluons 
+        que $an$ divise $bn$.
+        \qed 
+    \end{Preuve*}    
+
+    \begin{prop}{($P_r$)}{}
+        \[ an|bn \implies  a|b \]
+    \end{prop}
+
+    \begin{Preuve*}{($P_r$)}{}
+        Nous voulons prouver que si $an$ divise $bn$, \textbf{alors} $a$ divise forcément $b$ ($P_r$). 
+        Nous allons montrer $P_r$ par \textcolor{red}{\textit{preuve directe}}. Supposons que $an$ divise $bn$. 
+        \textbf{Par définition}, cela signifie qu'il existe un entier $k \in \mathbb{Z}$ tel que 
+        \textcolor{myb}{$an \cdot k = bn$}.  En divisant les deux côtés de l'équation par $n$, 
+        nous obtenons $b = ak$. \textbf{Or}, si nous substituons la valeur que 
+        nous venons de dériver de $b$, nous avons : 
+                            \[ a|b \equiv a|ak \]
+        Cette équivalence tient, puisque toute division de $ak$ par $a$ implique de diviser $b$ par $a$.  
+        Autrement dit, $ak$ est une multiple de 
+        $a$; on peut obtenir $ak$ en multipliant $a$ par un facteur $k$. Cela revient à dire 
+        que $b$ est un multiple de $a$ et donc, \textbf{par définition}, $a|b$ Par conséquent, nous 
+        concluons que si $an|bn$, alors $a|b$, puisque $b$ est un multiple de $a$. \qed
+    \end{Preuve*}
+    
+
+    \paragraph{}
+    Nous venons de montrer que la proposition $P_q$ et sa réciproque $P_r$ sont toutes deux vraies 
+    Par la définition d'une \textit{proposition biconditionnelle}, nous concluons que la proposition :
+                        \[ an|bn \Leftrightarrow  a|b \]
+    est vraie. Autrement dit, $P(a,b,n) \Coloneqq$ \textit{an divise bn si et seulement si a divise b }
+    est vraie. \qed
+    
+
+    \begin{enumerate}
+        \item[2.] Montrez que si n ne divise pas ab, alors n ne divise ni a, ni b.
+            Reformulez la proposition en langage logique, puis écrivez sa preuve en explicitant
+            chaque technique utilisée.
+    \end{enumerate}
+
+    Soit la proposition $P^{\prime}(a,b, n)$ : si $n$ ne divise pas $ab$, alors $n$ ne divise 
+    ni $a$, ni $b$. Nous pouvons réécrire $P^{\prime}(a,b, n)$ en language logique de la façon suivante : 
+                        \[ P^{\prime}(a,b, n) \Coloneqq  n \nmid ab \implies  (n \nmid a) \land (n \nmid b) \]
+    Nous faisons face à une proposition conditionnelle où le côté droit de l'implication contient 
+    une conjonction.
+
+    \begin{prop}{($P^{\prime}(a,b, n)$)}{}
+        \[ n \nmid ab \implies  (n \nmid a) \land (n \nmid b) \]
+    \end{prop}
+
+    \begin{Preuve*}{}{}
+        Nous voulons prouver que si un nombre $n$ ne divise pas $ab$, alors ce nombre ne divise ni $a$ ni $b$. 
+        Nous allons montrer $P^{\prime}(a,b, n)$ par \textcolor{red}{\textit{contraposé}}. Supposon la négation 
+        du côté droit de l'implication. Autrement dit, supposons :
+        \[ \neg \left( (n \nmid a) \land (n \nmid b) \right) \]
+        Par \textbf{De Morgan}, nous avons 
+
+        \begin{align*}
+            \neg \left( (n \nmid a) \land (n \nmid b) \right) &\equiv  \neg (n \nmid a) \lor \neg (n \nmid b)
+                    \\ 
+                                  &\equiv  (n | a) \lor (n | b)
+        \end{align*}
+        Nous allons alors prouver que si $n|a$ \textbf{ou} $n|b$, alors, $n|ab$, soit la \textbf{contraposée} de 
+        $P^{\prime}(a,b, n)$. 
+
+        \begin{align}
+                (n|a) \lor (n|b) \implies n|ab                    
+        \end{align}
+
+        \begin{note}{}{}
+            Intuitivement, nous savons déjà que si on nombre $n$ divise un nombre
+            $a$ ou un nombre $b$, ce nombre $n$ divise nécessairement, le produit $ab$.
+        \end{note}
+
+        \textit{\textcolor{red}{Preuve par cas}}. \vspace{1em} \\
+        \underline{\textbf{Cas 1}} : $n|a$ \underline{\textbf{Cas 2}} $n|b$. \\ 
+        Sans perte de généralité, si $n|a$, \textbf{alors} il existe un entier $k \in \mathbb{Z}$ tel que 
+        $nk = a$. Donc, $ab = (nk) \cdot b$. Et pour diviser $ab$, 
+        il faut que $n$ divise $n \cdot (kb)$ ;  autrement dit, \textbf{pour que $n$ divise $ab$}, 
+        \textbf{il suffit que que $n$ divise $n$}, ce qui est toujours vrai pour tous $n \in \mathbb{Z^*}$. 
+        \begin{align*}
+            n|ab &\equiv n|(nk) \cdot b \\
+                 &\equiv n|n \cdot (kb) \\ 
+                 &\equiv n|nkb
+        \end{align*}
+        Par conséquent, $nkb$ est un multiple de $n$ et nous concluons alors que $n$ divise $ab$, puisque 
+        par substitutions $n$ divise $ab$.
+        
+        \paragraph{}
+        Ayant, indiqué que le \underline{\textbf{Cas 2}} se traite de façon similaire au \underline{\textbf{Cas 1}},
+        nous concluons que, dans les deux cas, $n$ divise $ab$. Nous venons donc de prouver la contraposée 
+        de $P^{\prime}(a,b,n)$. Puisque la contraposée de $P^{\prime}(a,b,n)$ est vraie, il s'ensuit que 
+        $P^{\prime}(a,b,n)$ est aussi vraie. Nous concluons alors que si un entier $n$ ne divise pas un produit 
+        $ab$, alors cet entier $n$ ne divise ni $a$ ni $b$. \qed 
+    \end{Preuve*}
+
+    \begin{enumerate}
+        \item[3.] Remarquez que la réciproque de (2.) n’est pas vraie. Donnez un contre-exemple. 
+    \end{enumerate}
+
+    La récirpoque de $P^{\prime}(a,b, n)$, $Q^{\prime}(a,b, n)$ peut être réécrite comme suit: 
+    \[  Q^{\prime}(a,b, n) \Coloneqq (n \nmid a) \land (n \nmid b)  \implies  n \nmid ab \]
+    Et cela revient à affirmer que \textit{ si un nombre \textcolor{myb}{$n$} ne divise   
+        pas un nombre \textcolor{myb}{$a$} ni un nombre \textcolor{myb}{$b$}, alors ce nombre
+    \textcolor{myb}{$n$} ne divise pas le produit \textcolor{myb}{$ab$}}. Cette proposition est fausse.   
+
+    \begin{Preuve*}{}{}
+        Nous allons prouver que la réciproque de $P^{\prime}(a,b,n)$ est fausse par 
+        \textcolor{red}{\textit{contre-exemple}}. 
+        Pour réfuter $Q^{\prime}(a,b,n)$, nous allons montrer qu'il existe des entiers 
+        $a, b, n \in \mathbb{Z}$ tels que $n \nmid a$ et $n \nmid b$ et pourtant $n | ab$. 
+        Soit $n = 4$, $a = 2$, $b = 6$, et $ab = 12$. Nous savons que 
+        $4$ ne divise pas $2$. Nous savons également que $4$ ne divise $6$. Or, $4$ divise 
+        $12$. Nous avons donc un exemple de $a, b, n \in \mathbb{Z}$ qui contredit $Q^{\prime}(a,b,n)$. 
+        Nous concluons que $Q^{\prime}(a,b,n)$ est faux. \qed
+    \end{Preuve*}
+
+    \begin{enumerate}
+        \item[4.] Montrez que n divise a et b si et seulement si n divise pgcd(a; b). Reformulez
+        la proposition en langage logique, puis écrivez sa preuve en explicitant chaque
+        technique utilisée.
+    \end{enumerate}
+
+    Soit la proposition $P^{\prime\prime}(a,b,n)$ : $n$ divise $a$ \textbf{et} $b$  
+    \textbf{si et seulement si}  $n$ divise $pgcd(a,b)$, nous pouvons réécrire $P^{\prime\prime}(a,b,n)$ 
+    en language logique de la façon suivante: 
+    \[ P^{\prime\prime}(a,b,n)  \Coloneqq (n|a) \land (n|b)  \Leftrightarrow n|pgcd(a,b) \]
+    Nous savons qu'une telle proposition biconditionnelle est une synthèse de \textbf{propositions conditionnelles}
+    distinctes que nous appellerons $P^{\prime\prime}_r$ et $P^{\prime\prime}_s$ :
+
+
+    \begin{align}
+              &P^{\prime\prime}_q \Coloneqq (n|a) \land (n|b) \implies  n|pgcd(a,b) \\ 
+              &P^{\prime\prime}_r \Coloneqq n|pgcd(a,b) \implies (n|a) \land (n|b)
+    \end{align}  
+    \paragraph{}
+    \textbf{Pour montrer la véracité de $P^{\prime\prime}(a,b,c)$}, 
+    nous allons donc montrer que $P^{\prime\prime}_q$ et $P^{\prime\prime}_r$ sont vrais.
+
+
+    \begin{prop}{($P^{\prime\prime}_q(a,b, n)$)}{}
+        \[ (n|a) \land (n|b) \implies  n|pgcd(a,b) \]
+    \end{prop}
+
+    \begin{Preuve*}{}{}
+       Nous voulons montrer que si $n$ divise $a$ et $n$ divise $b$, \textbf{alors}, $n$ 
+       divise le plus grand commun diviseur de $a$ et $b$. Nous allons montrer 
+        $P^{\prime\prime}_q(a,b, n)$ par \textcolor{red}{\textit{preuve directe}}. 
+        \begin{Lemme}{}{}
+            Le pgcd(a,b) est un multiple de n'importe quel diviseur commun de $a$ et $b$.
+        \end{Lemme}
+        Ce Lemme découle de la définition du pgcd, qui est le plus grand diviseur commun de \( a \) et \( b \),
+        impliquant qu'il est un multiple de tous les autres diviseurs communs. \vspace{1em}\\
+
+        Supposons que $n$ divise $a$ et $n$ divise $b$. \textbf{Par définition}, $n$ est un diviseur 
+        commun de $a$ et $b$:  
+        \[ n \Coloneqq dc(a,b) \]
+        \textbf{Or}, si $n$ est un diviseur commun de $a$ et $b$, \textbf{il faut} que $n$ divise le 
+        plus grand diviseur commun de $a$ et $b$, par le \textbf{\textcolor{brown}{Lemme 1}}.
+        En effet, si $n$ est bien un diviseur commun de $a$ et $b$, il y a deux cas possibles. Soit :
+        \begin{itemize}
+            \item $n$ est l'unique diviseur commun de $a$ et $b$ et donc n est est le plus grand commun diviseur 
+                de $a$ et $b$. \textbf{Par définition} : 
+                \[ n = pgcd(a,b) \]
+            \item $n$ n'est pas l'unique diviseur de $a$ et $b$ et il existe un pgcd(a,b), tel que 
+                \[ n \neq pgcd(a,b) \]
+        \end{itemize}
+        Dans le premier cas, on sait que $n$ divise le $pgcd(a,b)$, par le \textcolor{brown}{\textbf{Lemme 1}}. 
+        Dans le deuxième cas, on sait que $n$ divise $pgcd(a,b)$ puisque n'importe quel 
+        nombre $n \in \mathbb{Z^*}$ peut se diviser lui-même. \vspace{1em} \\      
+        Par conséquent, nous concluons que si $n$ divise $a$ et $n$ divise $b$, alors $n$ divise 
+        nécessairement le plus grand commun diviseur de $a$ et $b$. \qed
+    \end{Preuve*}
+        
+
+    \begin{prop}{($P^{\prime\prime}_r(a,b, n)$)}{}
+        \[ n|pgcd(a,b) \implies (n|a) \land (n|b) \]
+    \end{prop}
+
+    \begin{Preuve*}{}{}
+       Nous voulons montrer que si $n$ divise le plus grand commun diviseur de $a$ et $b$ \textbf{alors}, $n$ 
+       divise $a$ \textbf{et} $n$ divise $b$. Nous allons montrer 
+       $P^{\prime\prime}_r(a,b, n)$ par \textcolor{red}{\textit{preuve directe}}. \vspace{1em} \\
+        Supposons que $n$ divise le plus grand commun diviseur de $a$ et $b$. \textbf{Alors}, $n$ 
+        est un facteur de $pgcd(a,b)$ et il existe un entier $k \in \mathbb{Z}$ tel que 
+        $nk = pgcd(a,b)$.  \vspace{1em} \\ 
+        \textbf{Or}, s'il existe bien un nombre qui se trouve à être le plus grand commun diviseur de $a$ 
+        et $b$, $n$ est alors un facteur de $a$ tout en étant un facteur de $b$. Autrement dit, 
+        il est possible d'obtenir $a$ en multipliant $pgcd(a,b)$ par un entier $l \in \mathbb{Z}$  
+        et il est possible d'obtenir $b$ en multiple $pgcd(a,b)$ par un eniter $m \in \mathbb{Z}$. 
+        \vspace{1em} \\ 
+        Similairement, il est possible d'obtenir $a$ en multipliant $n$ par $kl$ et 
+        il est possible d'obtenir $b$ en multiplant $n$ par $km$ : 
+        \begin{align*}
+                a &= pgcd(a, b) \cdot l = nkl \\
+                b &= pgcd(a, b) \cdot m = nkm 
+        \end{align*}
+        \textbf{Par définition}, $n$ est donc un facteur de $a$ tout en étant un facteur de $b$. 
+        Ainsi, $n$ divise $a$ et $n$ divise $b$. Nous concluons que si $n$ divise $pgcd(a,b)$ 
+        $n$ divise également $a$ et $b$. 
+    \end{Preuve*}
+
+    Nous venons de montrer que la proposition $P^{\prime\prime}_q(a, b, n)$ et sa 
+    récriproche $P^{\prime\prime}_q(a, b, n)$ sont toutes deux vraies. Par la définition d'une 
+    \textit{proposition biconditionnelle}, nous concluons que la proposition :
+    \[ n|pgcd(a,b) \Leftrightarrow (n|a) \land (n|b) \]
+    est vraie. Autrement dit, $P^{\prime\prime}(a, b, n) \Coloneqq$ 
+    \textit{n divise le plus grand commun diviseur de $a$ et $b$ si et seulement si $n$ divise $a$ 
+    et $n$ divise $b$} est vraie. 
+
+    \begin{enumerate}
+        \item[5.] Montrez que $pgcd(an; bn) = n \times pgcd(a; b)$. Reformulez la proposition en langage
+        logique, puis écrivez sa preuve en explicitant chaque technique utilisée.
+        (Indice : Montrez que $n \times pgcd(a; b)$ divise $pgcd(an; bn)$. Qu’en déduisez-vous ?)
+    \end{enumerate}
+
+    Soit la proposition $P(a,b,n,d, d^{\prime})$ : $pgcd(an, bn) = n \times pgcd(a,b)$, nous 
+    pouvons réécrire $P(a,b,n,d, d^{\prime})$ en language logique de la façon suivante :
+    \begin{align*}
+        &P(a,b,n,d^{\prime})  \Coloneqq \left(d^{\prime} = pgcd(an,bn)\right) 
+        \implies \left( d = n \times pgcd(a,b) \right), \\ 
+        &a,b,n, d^{\prime} \in \mathbb{Z}
+    \end{align*} 
+    Nous allons procéder en montrant que le nombre $d^{\prime}$ divise $n \times pgcd(a,b)$ et que 
+    $n \times pgcd(a,b)$ divise le nombre $d^{\prime}$, ce qui montre que les deux expressions sont 
+    égales. Nous commençons par prouver le Lemme suivant. 
+
+    \begin{Lemme}{}{}
+        Si $a|b$ et $b|a$, \textbf{alors}, $a = b$ ou $a = -b$, pour tout $a, b \in \mathbb{Z}$   
+    \end{Lemme}                 
+    \begin{Preuve*}{}{}
+        Nous procédons par \textcolor{red}{\textit{preuve directe}}. Supposons que $a|b$ et $b|a$. 
+        Alors, il existe des entiers $k$ et $l \in \mathbb{Z}$ tels que 
+        $ak = b$ et $bl = a$. Donc nous avons : 
+        \begin{align*}
+            a &= bl \\
+                  &= (ak) \cdot l\\
+                  &= akl\\
+        \end{align*}
+        Et donc, nous avons également :
+        \begin{align*}
+            a - akl = 0 \\ 
+            a(1 -kl) = 0 \\ 
+            1 - kl = 0 \\ 
+            1 = kl
+        \end{align*}
+        Sachant que $k$ et $l$ appartiennent à $\mathbb{Z}$, les seuls nombres qui satisfont la dernière égalité 
+        est $k = l = 1$ ou $k = l = -1$. 
+        \begin{itemize}
+            \item Si  $k = l = 1$, $a = bl = b \cdot 1 = b$. Et $b = ak = a \cdot 1 = a$
+            \item Si  $k = l = -1$, $a = bl = b \cdot -1 = -b$. Et $b = ak = a \cdot -1 = -a$
+        \end{itemize}
+        Donc, nous concluons que si $a|b$ et $b|a$, il s'ensuit que $a = b$ ou $a = -b$. \qed
+    \end{Preuve*}
+        Le corollaire de ce lemme est 
+        que si nous considérons uniquement des entiers $a, b, k, l \in \mathbb{N}$, 
+        $a|b$ et $b|a$ implique que $a = b$. Par ailleurs, nous pouvons faire 
+        ce saut logique, puisque le problème implique la notion de pgdc qui, par définition, 
+        est un entier positif. 
+    \begin{Lemme}{}{}
+        Si $a|b$ et $b|a$, \textbf{alors}, $a = b$, pour tous $a, b \in \mathbb{N}$   
+    \end{Lemme}
+    Avant de montrer $P(a,b,n, d^{\prime})$, nous introduisons un autre Lemme qui nous permettra de 
+    résoudre le problème. 
+    \begin{Lemme}{}{}
+        Si $a|c$ et $b|c$ et $pgcd(a,b)$, \textbf{alors}, $ab|c$    
+    \end{Lemme}
+    \begin{Preuve*}{}{}
+        Supposons que $a|c$ et $b|c$ et $pgcd(a,b) = 1$. Alors, il existe des entiers $k$ et $l$ formant 
+        une combinaison linéaire de $a$ et $b$ égale à $1$ ; $ak + bl = 1$ 
+        (Conséquence du \textbf{Théorème de Bézout}). \textbf{Par conséquent} $cak + cbl = c$ :
+        \begin{align*}
+                    ak + bl &=  1 \\ 
+                    c(ak + bl) &= 1 \cdot c \\ 
+                    cak + cbl &= c 
+        \end{align*}
+        Par ailleurs, puisque $a|c$ et $b|c$, doit exister des entiers $m$ et $p$ $\in \mathbb{Z}$ 
+        tels que \textcolor{myg}{$c = ma$} et \textcolor{myp}{$c = pb$}.  
+        Nous avons donc $\textcolor{myp}{(pb)}ak + \textcolor{myg}{(ma)}bl = c$ : 
+        \begin{align}
+                \nonumber (pb)ak + (ma)bl = c \\  
+                \nonumber pbak + mabl = c \\  
+                \nonumber ab(pb) + ab(ml) = c \\  
+                ab(pb + ml) = c  
+        \end{align}
+        Puisque $ab$ divise le côté gauche de l'équation (1.6) ($ab|ab(pb +ml)$), $ab$ divise nécessairement 
+        le côté droit de l'équation, c'est-à-dire $c$. 
+        Nous venons de montrer que si $a|c$ et $b|c$ et $pgcd(a,b) = 1$, \textbf{alors}
+        $ab|c$. \qed
+    \end{Preuve*}
+    Nous avons prouvé le \textcolor{brown}{\textbf{Lemme 4}} en supposant que $pgcd(a,b) = 1$. Cependant, même 
+    si le $pgcd$ de $a$ et $b$ n'est pas 1, nous pouvons toujours trouver un entier $n$ tel que 
+    $abn = c$, car $c$ est une multiple de $a$ et $b$. Donc si $a|c$ et $b|c$, même si 
+    $pgcd(a,b) \neq 1$, $ab$ divisera $c$.  
+    \begin{Lemme}{}{}
+        Si $a|c$ et $b|c$, \textbf{alors}, $ab|c$    
+    \end{Lemme}
+
+
+
+
+    \begin{prop}{($P_q(a,b, n, d^{\prime})$)}{}
+    \begin{align*}
+             d^{\prime} = pgcd(an, bn) \implies d^{\prime} \text{ \textbf{divise} } n \times pgcd(a,b),
+             \\ a, b, n, d^{\prime} \in \mathbb{N} 
+    \end{align*}       
+    \end{prop}
+    
+    \begin{Preuve*}{}{}
+        Nous procédons par \textcolor{red}{\textit{preuve directe}}. Supposons que $d^{\prime}$ est le 
+        plus grand commun diviseur de $an$ et $bn$, pour $an$ et $bn \in \mathbb{N}$ ; $d^{\prime} = pgcd(an, bn)$ 
+        . Et soit $d = pgcd(a,b)$ Alors, nous savons que \textcolor{myb}{$d^{\prime}$ divise toutes les 
+        \textbf{combinaisons linéaires} de $an$ et $bn$}, \textbf{par la définition d'un $pgcd$}.
+        Si $d$ est effectivement le $pgcd(a,b)$, alors $d$ est une combinaison linéaire de $a$ et $b$, 
+        par le théorème de Bézout. Autrement dit, $d = ax + by = pgcd(a,b)$. En multipliant 
+        cette combinaison linéaire ($d$) par $n$, on obtient l'équation $nd = n \times pgcd(a,b) = n(ax + by)$
+        Et on peut l'expandre en \textcolor{myb}{$nd = nax + nbx$}. Cette dernière équation est simplement 
+        une combinaison linéaire de $an$ et $bn$. 
+        \begin{align*}
+            d = pgcd(a,b) &= ax + by &\text{(Bézout)} \\ 
+            n \times d &=  n(ax + by) \\ 
+            n \times d &= nax + nby \\
+            n \times d &= (an)x + (bn)y 
+        \end{align*}
+        Puisque $d^{\prime}$ divise toutes les combinaisons linéaire de $an$ et $bn$ et que 
+        $nd$ est peut être reformulé en combinaison linéaire de $an$ et $bn$, nous concluons que 
+        $d^{\prime}$ divise $nd$. Autrement dit, $pgcd(an ,bn)$ divise $n \times pgcd(a,b)$ 
+    \end{Preuve*}
+
+    \begin{prop}{($P_r(a,b, n, d^{\prime})$)}{}
+    \begin{align*}
+             d = n \times pgcd(a, b) \implies \text{ \textbf{divise} } pgcd(an, bn),
+             \\ a, b, n, d \in \mathbb{N} 
+    \end{align*}       
+    \end{prop}
+
+
+    \begin{Preuve*}{}{}
+        Nous procédons par \textcolor{red}{\textit{preuve directe}}. Supposons que  $d$ est le 
+        plus grand commun diviseur de $a$ et $b$, pour $a$ et $b$ $\in \mathbb{N}$. Et soit 
+        $d^{\prime} = pgcd(an, bn)$. Alors, $d^{\prime}$ est une combinaison linéaire de 
+        $an$ et $bn$. 
+        et nous pouvons exprimer $d^{\prime}$ comme suit  $ d = anx + bny$ ou 
+        \textcolor{myp}{$n(ax + by$)}.  Aisi, nous savons que $n$ divise $d^{\prime} = n(ax + by)$ \vspace{1em}. \\ 
+
+        Prouvons maintenant que $d$ divise $d^{\prime}$. Par définition, $d$ divise 
+        toutes les combinaisons linéaire de $a$ et $b$. Donc, $d$  divise un combinaison linéaire telle que 
+        $ax + by$. En multipliant cette combinaison linéaire par $n$, on obtient $a(nx) + b(nx)$, ce qui est 
+        aussi une combinaison linéaire de $a$ et $b$. Or, nous avons dit que $d^{\prime}$ peut être 
+        reformulé en \textcolor{myp}{$n(ax + by)$} $ = a(nx) + b(nx)$, qui est toujours 
+        une combinaison linéaire de $a$ et $b$. Ainsi, nous concluons que $d$ divise $d^{\prime}$. \vspace{1em} \\ 
+        Nous avons montré que $n$ divise $d^{\prime}$ et que $d$ divise $d^{\prime}$. 
+        Par le \textbf{\textcolor{brown}{Lemme 5}}, le produit $nd$ divise donc $d^{\prime}$. \qed   
+    \end{Preuve*}
+
+
+    En montrant, $P_q(a,b, n, d^{\prime})$ et $P_r(a,b, n, d^{\prime})$, nous avons montré que 
+    $pgcd(an, bn)$ divise $n\times pgcd(a,b)$ et que $n \times pgcd(a, b)$ divise $pgcd(an, bn)$. 
+    Par le \textbf{\textcolor{brown}{Lemme 3}}, nous concluons donc que $P(a,b,n, d^{\prime})$ tient. 
+    Autrement dit : 
+    \[ pgcd(an, bn) =  n \times pgcd(a, b) \]
+    parce que 
+    \begin{itemize}
+        \item $pgcd(an, bn) \textbf{ divise }  n\times pgcd(a,n)$ \textbf{et} \\ 
+        \item $n\times pgcd(a,n) \textbf{ divise } pgcd(an, bn)$
+    \end{itemize}
+    \qed
+    \section*{Problème 2 $\quad$ $\cdot$  $\quad$ Échiquier troué}
+  \begin{enumerate}
+
+    \item
+    Pour recouvrir l'echiquier de gauche (k = 1) il suffit de le voir comme une matrice $2 \times 2$. Comme le trou est dans la position impair, pair donc dans la coordonnée (1,2) de la matrice, le triomino sera dans les autres cases soit en ((1,1),(2,1), (2,2)).
+    Pour recouvrir l'equichiquer de droite (k = 2) on va aussi le voir comme une matrice mais cette fois-ci $4 \times 4$. le premier triomino sera en ((1,1), (1,2), (2,1)), le deuxième en ((1,3), (1,4), (2,4)), le troisième en ((3,1), (4,1), (4,2)), le quatrieme en ((2,2), (2,3), (3,3)) et le cinquième en ((4,3),(4,4),(3,4)).
+    
+    \item
+
+\subsection*{Cas de base ($k = 0$):}
+Pour $k = 0$, nous avons un échiquier $1 \times 1$ avec une seule cellule. La formule devient $3 \mid (2^0 \times 2^0 - 1)$, ce qui se simplifie en $3 \mid (1 - 1)$, confirmant que trois divise zéro.
+
+\subsection*{Cas de base ($k = 1$):}
+Pour $k = 1$, nous avons un échiquier $2 \times 2$ avec quatre cases. La formule devient $3 \mid (2^1 \times 2^1 - 1)$, ce qui se simplifie en $3 \mid (4 - 1)$, confirmant que trois divise trois.
+
+\subsection*{Étape inductive:}
+Supposons $3 \mid (2^n \times 2^n - 1)$ pour un $k = n$ arbitraire.
+
+Maintenant, nous voulons montrer que $3 \mid (2^{n+1} \times 2^{n+1} - 1)$.
+
+Nous avons $U_n$: $3 \mid (2^n \times 2^n - 1)$.
+
+Considérons maintenant $U_{n+1}$: $3 \mid (2^{n+1} \times 2^{n+1} - 1)$.
+
+Cela peut s'écrire comme $3 \mid (4(2^n \times 2^n - 1) + 3)$.
+
+Puisque $3 \mid (2^n \times 2^n - 1)$, nous pouvons dire $3 \mid (4(2^n \times 2^n - 1))$.
+
+Ajouter 3 à un multiple de 4 ne change pas sa divisibilité par 3.
+
+Par conséquent, $3 \mid (4(2^n \times 2^n - 1) + 3)$.
+
+Par induction, $\forall k \in \mathbb{N}, 3 \mid (2^k \times 2^k - 1)$.
+
+
+\item Dans l'algorithme suivant on commence par prendre en compte deux cas de base, soit si k est égal à 0, la fonction retourne une liste vide, et si k est égal à 1, elle génère les positions du triomino initial en fonction de la parité de x et y. Ensuite, la fonction entre dans une boucle récursive où, à chaque itération, elle divise le problème en quadrants plus petits en appelant la fonction avec k réduit de 1 elle et le fait jusqu'au cas de base. Les positions des triominos résultantes sont déterminées en fonction de la position du trou ou de la case pleine dans le quadrant du plateau, on place un triomino au milieu de l'echiquier de facon a ce que chaque cadran ait une case pleine ou un trou et ensuite on divise le cadran en 4, et les positions des triominos sont ajoutées à une liste appelée listeARetourner. Ainsi, la fonction construit progressivement les positions des triominos sur le plateau, en prenant en compte les subdivisions récursives et les conditions de parité et retorune une liste contenant des listes avec les coordonnées de position de chaque triomino.
+
+\texttt{PositionsTriominos(k, (x, y)):} \\
+    \quad \texttt{listeARetourner = []} \\
+    \quad \texttt{Si } \( k = 0 \): \\
+    \quad \quad \texttt{Retourner une liste vide} \\
+    \quad \texttt{Sinon, si } \( k = 1 \): \\
+    \quad \quad \texttt{Si } \( x \) est pair et \( y \) est pair: \\
+    \quad \quad \quad \texttt{Ajouter [[x-1, y-1], [x, y-1], [x-1, y]] à listeARetourner} \\
+    \quad \quad \texttt{Sinon, si } \( x \) est impair et \( y \) est impair: \\
+    \quad \quad \quad \texttt{Ajouter [[x+1, y+1], [x+1, y], [x, y+1]] à listeARetourner} \\
+    \quad \texttt{Sinon, si } \( x \) est impair et \( y \) est pair: \\
+    \quad \quad \texttt{Ajouter [[x, y-1], [x+1, y], [x+1, y-1]] à listeARetourner} \\
+    \quad \texttt{Sinon, si } \( x \) est pair et \( y \) est impair: \\
+    \quad \quad \texttt{Ajouter [[x, y+1], [x-1, y], [x-1, y+1]] à listeARetourner} \\
+    \quad \texttt{Tant que } \( k > 1 \) \\
+    \quad \quad \texttt{PositionsTriominos(k-1, (x, y))} \\
+    \quad \texttt{Si } \( x > \frac{k+1}{2} \) \texttt{et} \( y > \frac{k+1}{2} \), \texttt{alors} \\
+    \quad \quad \texttt{Ajouter } \(\left[ \left(\frac{k}{2}+1, \frac{k}{2}\right), \left(\frac{k}{2}, \frac{k}{2}\right), \left(\frac{k}{2}, \frac{k}{2}+1\right) \right]\){à listeARetourner} \\
+    \quad \texttt{Si } \( x > \frac{k+1}{2} \) \texttt{et} \( y < \frac{k+1}{2} \), \texttt{alors} \\
+    \quad \quad \texttt{Ajouter } \(\left[ \left(\frac{k}{2}+1, \frac{k}{2}+1\right), \left(\frac{k}{2}, \frac{k}{2}\right), \left(\frac{k}{2}, \frac{k}{2}+1\right) \right]\) {à listeARetourner}\\
+    \quad \texttt{Si } \( x < \frac{k+1}{2} \) \texttt{et} \( y > \frac{k+1}{2} \), \texttt{alors} \\
+    \quad \quad \texttt{Ajouter} \(\left[ \left(\frac{k}{2}+1, \frac{k}{2}+1\right), \left(\frac{k}{2}, \frac{k}{2}\right), \left(\frac{k}{2}+1, \frac{k}{2}\right) \right]\) {à listeARetourner} \\
+    \quad \texttt{Si } \( x < \frac{k+1}{2} \) \texttt{et} \( y < \frac{k+1}{2} \), \texttt{alors} \\
+    \quad \quad \texttt{Ajouter } \(\left[ \left(\frac{k}{2}+1, \frac{k}{2}+1\right), \left(\frac{k}{2}, \frac{k}{2}+1\right), \left(\frac{k}{2}+1, \frac{k}{2}\right) \right]\) {à listeARetourner}
+
+\end{enumerate}  
+
+    \section*{Problème 3 $\quad$ $\cdot$  $\quad$ Sierpaskal}
+    
+
+    \begin{enumerate}
+        \item Rappelez la définition récursive de $i \choose j$.  
+    \end{enumerate}
+
+    \begin{figure}[H]
+                \[
+                \begin{array}{ccccccccccccc}
+                 & & & & & 1 & & & & & \\
+                 & & & & 1 & & 1 & & & & \\
+                 & & & 1 & & 2 & & 1 & & & \\
+                 & & 1 & & 3 & & 3 & & 1 & & \\
+                 & 1 & & 4 & & 6 & & 4 & & 1 & \\
+                1 & & 5 & & 10 & & 10 & & 5 & & 1 \\
+                \end{array}
+                \]
+    \caption{Triangle de Pascal }
+    \end{figure}
+
+    \begin{figure}[H]
+\[
+        \begin{array}{ccccccccccccccccc}
+         & & & & & & & \binom{0}{0} & & & & & & & & \\
+         & & & & & & \binom{1}{0} & & \binom{1}{1} & & & & & & & \\
+         & & & & & \binom{2}{0} & & \binom{2}{1} & & \binom{2}{2} & & & & & & \\
+         & & & & \binom{3}{0} & & \binom{3}{1} & & \binom{3}{2} & & \binom{3}{3} & & & & & \\
+         & & & \binom{4}{0} & & \binom{4}{1} & & \binom{4}{2} & & \binom{4}{3} & & \binom{4}{4} & & & & \\
+         & & \binom{5}{0} & & \binom{5}{1} & & \binom{5}{2} & & \binom{5}{3} & & \binom{5}{4} & & \binom{5}{5} & & & \\
+        \end{array}
+\]
+    \caption{Représentation du Triangle de Pascal}
+    \end{figure}
+
+    \begin{Concept*}{}{}
+     En observant le Triangle de Pascal, on observe deux \textbf{cas extrêmes}. Le premier cas 
+    est lorsque $n \choose k$ est tel que $n \choose 0$; Il s'agit de chacune des premières entrées 
+    du triangle à la rangée $n$ (considérant qu'il existe une rangée 0). Le Le second cas 
+    est lorsque $n \choose k$ est tel que $n \choose n$ et donc $k = n$. Il s'agit de chacune des 
+    dernières entrées du triangle à la rangé $n$.        
+    \end{Concept*}
+
+
+    \begin{note}{}{}
+        \textbf{Par définition}, 
+        $n \choose 0$ est \textbf{le nombre} de sous-ensemble de longueur $0$ il est possible
+        de former en sélectionnant 
+        $0$ élément d'un ensemble de longueur $n$. Dans ces conditions,
+        \textbf{on peut seulement former l'ensemble vide},
+        $\emptyset$, et ce \textbf{nombre} est donc $1$. 
+        Par ailleurs, $n \choose n$ est le \textbf{nombre} de sous-ensemble de longueur $n$ il est possible d'obtenir 
+        en sélectionnant $n$ éléments d'un ensemble de $n$ éléments. \textbf{Le seul sous-ensemble 
+        possible selon ses conditions} est l'ensemble original de $n$ élément, et le nombre 
+        $n \choose n$ est donc égale à $1$. 
+    \end{note}
+
+    Nous postulons alors que les \textbf{cas extrêmes} du triangle de Pascal sont de bon candidat pour 
+    des \textbf{cas de base} d'une définition récursive. Considérons alors la définition partielle suivante. 
+    \begin{Definitionx}{Cas de base de $C(n, k)$}{}
+       $n \choose k$ $\Coloneqq$ $n \choose 0$ $= 1$ \textbf{et} $n \choose n$ $= 1$      
+    \end{Definitionx}
+
+    D'après le triangle de Pascal, nous savons que chaque entré à la rangée $n$ est égal à 
+    l'entrée à la somme de la $k-1$\textit{-ième} entrée à la rangé $n-1$ et de la \textit{$k$-ième} entrée 
+    à la rangée $n-1$.
+    Autrement, dit 
+    
+    \begin{Definitionx}{Cas constructeur $C(n, k)$}{}
+        \begin{center}
+        $n \choose k$ =  $n-1 \choose k-1$ + $n -1 \choose k$, $k \neq n$, $k \neq 0$ 
+        \end{center}        
+    \end{Definitionx}
+
+\begin{Definition}{}{}
+    Le nombre \( C(n, k) \) est défini comme suit :
+    \begin{align*}
+            C(n, k) \Coloneqq
+            \begin{cases}
+                1 & \text{si } k = 0 \textbf{ ou } \\ 
+                  & \text{si } k = n, \\
+                C(n-1, k-1) + C(n-1, k) & \text{si } 0 < k < n.
+            \end{cases}             
+    \end{align*}    
+\end{Definition}
+
+    \begin{enumerate}
+        \item Montrez que pour tous naturels n et m et tout entier k, 
+            \begin{center}
+            $ \sum_{j=0}^{k}$ $m \choose k-j$ $n \choose j$ $=$ $m+n \choose k$.  
+            \end{center}
+        Commencez par reformuler la proposition en langage logique. Faites-en ensuite
+        une preuve par induction mathématique sur la valeur de n.
+    \end{enumerate}
+
+    Nous devons prouver la prosition suivante : 
+
+    \begin{prop}{$\left(P(j, k , m,  n)\right)$}{}
+    \begin{align*}
+        \forall n, m \in \mathbb{N}, k \in \mathbb{Z},&
+             \\ 
+                         &\sum_{j=0}^{k} {m \choose k-j} {n \choose j} = {m+n \choose k}
+    \end{align*}       
+    \end{prop}
+
+    \begin{Preuve*}{}{}
+        Nous allons montrer $P(j, k, m, n)$ par \textit{\textcolor{red}{induction mathématique}}.   
+
+        \paragraph{}
+        Notre preuve par induction commencer en vérifiant la validité de la proposition pour 
+        une valeur de base de $n$. Nous expliquons pourquoi $n$ (plutôt que $j$ ou $k$ ou $m$) 
+        limite le cas de base. \vspace{1em} \\ 
+        \underline{\textbf{Cas de base (n = 0)}}\\
+        Lorsque $\textcolor{myb}{n = 0}$, la somme $\sum_{j=0}^{k}{m \choose k-j}{0 \choose j}$ 
+        présente trois scénarios. \\ 
+        \begin{enumerate}
+            \item \textit{\textcolor{red}{Si}} $\textcolor{red}{j > 0}$,
+        \end{enumerate}
+         \textbf{alors} la somme devient simplement 
+        \[ \sum_{j=0}^{k} R \times {\textcolor{myb}{0} \choose \textcolor{red}{j}} = 
+        \sum_{j=0}^{k}R \times 0 = \textcolor{myg}{0}\]
+        puisque le nombre \textcolor{myg}{le nombre de sous-ensemble} de longeur \textcolor{red}{$j > 0$}
+        il est possible d'obtenir en sélectionnant \textcolor{red}{$j > 0$} éléments 
+        d'un ensemble de $\textcolor{myb}{0}$  élément est $\textcolor{myg}{0}$. En considérant 
+        les termes de gauches et les termes de droite de la proposition, 
+        nous avons : 
+        \[ \sum_{j=0}^{k} {m \choose k - j}{\textcolor{myb}{0} \choose \textcolor{red}{j}} = 0 
+        = {m + \textcolor{myb}{0} \choose k} \]
+        Puisque le terme de gauche de la proposition $P(j,k,m,n)$ est égal à zéro, 
+        le terme de droite doit nécessairement être égal à zéro, et la proposition 
+        tient donc pour le cas de base $\textcolor{myb}{n = 0}$ pour tout $\textcolor{red}{j > 0}$. 
+
+        \begin{enumerate}
+            \item[2.] \textit{\textcolor{red}{Si j = 0}},               
+        \end{enumerate}
+        \textbf{alors} la somme devient simplement   
+        \[ \sum_{j=0}^{k} {m \choose k - \textcolor{red}{0}} \times 
+            {\textcolor{myb}{0} \choose \textcolor{red}{0}} = 
+        \sum_{j=0}^{k} {m \choose k} \times 1 \]
+        puisque le nombre \textcolor{myg}{le nombre de sous-ensemble} de longeur \textcolor{red}{$j = 0$}
+        il est possible d'obtenir en sélectionnant \textcolor{red}{$j = 0$} éléments 
+        d'un ensemble de $\textcolor{myb}{0}$  élément est $\textcolor{myg}{0}$. En considérant 
+        les termes de gauches et les termes de droite de la proposition, 
+        nous avons : 
+        \[ \sum_{j=0}^{k} {m \choose k - \textcolor{red}{j}}{\textcolor{myb}{0} \choose \textcolor{red}{0}} 
+            =  {m + \textcolor{myb}{0} \choose k} \times 1  
+        = {m + \textcolor{myb}{n} \choose k} \]
+        la proposition tient donc pour le cas de base $\textcolor{myb}{n = 0}$ lorsque $\textcolor{red}{j = 0}$.
+        \begin{enumerate}
+            \item[3.] \textit{\textcolor{red}{Si}} $\textcolor{red}{j < 0}$,
+        \end{enumerate}
+        \textbf{alors}, similairement au cas 1, la somme est égale à $0$
+        puisque le nombre \textcolor{myg}{le nombre de sous-ensemble} de longeur \textbf{négative}   
+        \textcolor{red}{$j < 0$}
+        il est possible d'obtenir en sélectionnant \textcolor{red}{$j < 0$} éléments 
+        d'un ensemble de $\textcolor{myb}{0}$  élément est $\textcolor{myg}{0}$. 
+        \begin{note}{}{}
+        Par définition, un 
+        ensemble ne peut pas être de cardinal négatif et le plus petit ensemble possible 
+        est l'ensemble vide, $\emptyset$. 
+        \end{note}  
+        Puisque le côté gauche de la proposition (la sommation) est zéro le côté droit 
+        de la proposition doit nécessairement être zéro et le proposition tient donc pour les cas 
+        de base $\textcolor{myb}{n = 0}$ et pour tout $j \leq 0$.
+        \begin{note}{}{}
+            Nous aurions pu omettre de montrer que la proposition tient pour le cas de base 
+            $\textcolor{myb}{n = 0}$ et les $\textcolor{red}{j < 0}$, puisque la sommation 
+            débute à $j = 0$. 
+        \end{note}
+       
+        \textbf{Nous venons de montrer que le cas de base est $n = 0$} Peu importe la valeur 
+        du paramètre $j$ de la sommation, l'égalité donné par $P(j, k, m, n)$ tient pour 
+        le cas de base $n = 0$. 
+        \vspace{1em} \\ 
+        \underline{\textbf{Hypothèse d'induction}}\\
+        Supposons que 
+        $\sum_{j=0}^{k} {m \choose k-j} {n \choose j} = {m+n \choose k}$ est vrai
+        pour un certain entier naturel $n$. Nous devons prouver 
+        que le fait que la proposition tient pour $n$ implique que la proposition tient 
+        pour $\textcolor{myp}{n+1}$. 
+        \[\scalemath{0.8}{\sum_{j=0}^{k} {m \choose k-j} {n \choose j} = {m+n \choose k} \implies 
+        \sum_{j=0}^{k} {m \choose k-j} {\textcolor{myp}{n+1}   \choose j} = {m+ \textcolor{myp}{n+1}\choose k}}\]
+
+        \underline{\textbf{Cas n+1}}\\
+        Nous devons montrer que l'égalité suivante est vraie (en supposant qu'elle est vraie pour $n$)
+        \begin{align}
+            \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} {\textcolor{myp}{n+1} \choose j} = {m+ \textcolor{myp}{n+1}\choose k}
+        \end{align}
+        Selon le Triangle de Pascal (\S Hammack 4.6), 
+        \begin{align}
+            {\textcolor{myp}{n+1} \choose j} = \textcolor{red}{{n \choose j - 1} + {n \choose j}}
+        \end{align}
+        Nous pouvons donc réécrire la sommation de (1.7) comme suit :
+        \begin{align*}
+            \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} \times
+                \left( \textcolor{red}{{n \choose j - 1} + {n \choose j}} \right)
+        \end{align*}
+        En calculant le produit, nous pouvons séparer l'équation en deux sommations :
+        \begin{align}
+            \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} \times \textcolor{red}{{n \choose j - 1}} 
+            \quad + \quad \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} \times {n \choose j}
+        \end{align}
+        \textbf{Par l'hypothèse inductive}, la seconde expression de (1.9),
+        $\sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} \times {n \choose j}$, est simplement $m + n \choose k$. 
+        Nous avons donc 
+        \begin{align}
+            \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}}\textcolor{red}{{n \choose j - 1}} 
+            \quad + \quad {m + n \choose k}
+        \end{align}
+        Nous allons maintenant reformuler la première expression de (1.9). Notons d'abord que 
+        $j = 0$, la somme partielle de (1.9) est $0$ puisque : 
+        \begin{align*}
+            \textcolor{myb}{{m \choose k-j}}\textcolor{red}{{n \choose 0 - 1}} &=  
+            \textcolor{myb}{{m \choose k-j}}\textcolor{red}{{n \choose - 1}} \\ &=
+            \textcolor{myb}{{m \choose k-j}} \times \textcolor{red}{0} \\ &= 0 
+        \end{align*}
+
+        Par conséquent, nous pouvons commencer la sommation à l'index $j = 1$ puisque 
+        l'index $j = 0$ ne contribue pas à la somme.
+        \begin{align*}
+            \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}}\textcolor{red}{{n \choose j - 1}} 
+             \\ 
+            \Updownarrow \quad\quad\quad\quad\quad 
+             \\
+             \sum_{\textcolor{orange}{j = 1}}^{k} \textcolor{myb}{{m \choose k-j}}\textcolor{red}{{n \choose j - 1}} 
+        \end{align*}
+        Considérons un entier $i \in \mathbb{N}, \textcolor{brown}{i = j - 1}$. Nous allons présenter 
+        une sommation équivalente en utilisant $i$. Puisque lorsque $j = 1, i = j - 1 = 0$. Et lorsque 
+        $j = k, i = j - 1 = j - k$. Nous avons donc la sommation suivante. 
+        \begin{align*}
+             \sum_{\textcolor{orange}{j = 1}}^{k} \textcolor{myb}{{m \choose k-j}}\textcolor{red}{{n \choose j - 1}} 
+             \\ 
+            \Updownarrow \quad\quad\quad\quad\quad\quad 
+             \\
+             \sum_{\textcolor{brown}{i = 0}}^{\textcolor{brown}{k-1}} 
+             \textcolor{myb}{{m \choose k-(\textcolor{brown}{i-1})}}\textcolor{red}{{n \choose (\textcolor{brown}{i+1})   - 1}} 
+             \\ 
+            \Updownarrow \quad\quad\quad\quad\quad\quad
+             \\
+             \sum_{\textcolor{brown}{i = 0}}^{\textcolor{brown}{k-1}} 
+             \textcolor{myb}{{m \choose (k-\textcolor{brown}{1})\textcolor{brown}{-i}}}\textcolor{red}{{n \choose \textcolor{brown}{i}}} 
+        \end{align*}
+
+        Cette dernière équation a la même forme que l'hypothèse d'induction avec 
+        $k - 1$ plutôt que $k$.  Par l'hypothèse d'induction, nous pouvons donc déduire : 
+
+        \begin{align}    
+             \sum_{\textcolor{brown}{i = 0}}^{\textcolor{brown}{k-1}} 
+             \textcolor{myb}{{m \choose (k-\textcolor{brown}{1})\textcolor{brown}{-i}}}\textcolor{red}{{n \choose \textcolor{brown}{i}}}
+             = {m+n \choose k - 1}
+        \end{align}
+        En combinant (1.7), (1.10). (1.11), nous avons : 
+
+        \begin{align}
+            \sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} {\textcolor{myp}{n+1} \choose j} = {m + n \choose n - k} 
+            + {m+n \choose k}
+        \end{align}
+
+
+        Selon le Triangle de Pascal, nous avons alors 
+
+            $\sum_{j=0}^{k} \textcolor{myb}{{m \choose k-j}} {\textcolor{myp}{n+1} \choose j} = {m + n \choose n - k} 
+            + {m+n \choose k} = {m+n+1 \choose k}$ Nous venons donc de montrer que la proposition tient 
+            également pour le cas $n+1$ Ainsi, par induction mathématique, nous concluons que $P(j,k,m, n)$ est vraie. 
+            Autrement dit, pour tout naturels $n, m$ et tout entier $m$, l'égalité 
+                \[ \sum_{j=0}^{k} {m \choose k-j} {n \choose j} = {m+n \choose k} \]
+            est vraie. \qed 
+        \end{Preuve*}
+        
+        \begin{enumerate}
+            \item Démontrez, en utilisant l’identité de la question (2.), que pour tous naturels $k$ et $i$ 
+                et tout entier $j$, 
+                \[ P(i, j) = P(2^k +i, j) = P(2^k +i, 2^k +j) \]
+        \end{enumerate}
+        Nous allons d'abord reformuler l'identité pour l'exprimer en termes de variables 
+        adaptées pour la démonstration qui suit. Pour tout naturel $i = m, 2^k = n, j = k$, 
+        
+        \begin{align}
+            \textcolor{myp}{\sum_{r=0}^{j} {i \choose j-r} {2^k \choose r}} = {i + 2^k   \choose j}
+        \end{align}
+        Nous avons deux égalités à prouver. Nous allons les prouver une à la fois. 
+        Considérons la proposition suivante.  
+
+    \begin{prop}{($P$)}{}
+        \[ P(i, j) = P(2^k +i, j) \]
+    \end{prop}
+    
+        \begin{Preuve*}{}{}
+            Nous devons montrer que l'égalité donnée par $P$ tient. Nous allons procéder 
+            par \textcolor{red}{\textit{preuve directe}}. 
+            \vspace{1em} \\ 
+            Supposons que l'égalité de la proposition (1.9) est vraie. 
+            Le terme de droite de $P$ peut être réécrit comme suit, en utilisant 
+            la version adapté de l'identité (équation 1.13) : 
+            \begin{align*}
+                P(2^k + i, j)    &= P(i + 2^k, j) 
+                                \quad\quad\quad\quad\quad\quad \text{ Inversion de l'ordre } 
+                                \\
+                                &={i + 2^k \choose j} \text{ mod } 2 \text{ \quad\quad\quad\quad\quad\quad\; 
+                Def.  de P(i, j)} 
+                \\ 
+                              &= \textcolor{myp}{\left( \sum_{r=0}^{j} {i \choose j-r} {2^k \choose r} \right)}
+                              \text{ mod } 2 \quad\quad\quad 
+                              \text{Selon (1.13)}
+            \end{align*}
+            On a donc à prouver que 
+            \[ P(i, j) = \sum_{r=0}^{j} {i \choose j-r} {2^k \choose r} \text{ mod } 2   \]
+            Commençons par observer que si un nombre $c$ divise une nombre $a$ ou 
+            $c$ divise un nombre $b$, alors $c$ divise nécessairement le produit 
+            $ab$   
+            \begin{Lemme}{}{}
+                \begin{align*}
+                            (c|a) \lor (c|b) \implies c|ab
+                \end{align*}
+            \end{Lemme}   
+            \paragraph{}
+            Montrons que le Lemme 6 est vrai avec une \textit{\textcolor{red}{Preuve par cas}}. 
+            Supposons que la prémisse du Lemme 6 est vraie. Nous faisons alors face 
+            aux deux cas suivants.
+
+            \underline{\textbf{Cas  $c | a $}} \vspace{1em} \\ 
+            Dans ce cas, il existe un $r \in \mathbb{Z}$ tel que $a = rc$ et affirmer que 
+            $c | ab$ revient à affirmer que $c |(rc)b$. Or, puisque $ab$ est manifestement 
+            un multiple de $c$ (sachant que $ab = (rc)b = c(rb)$), il s'ensuit que 
+            $c$ divise $ab$. 
+            \vspace{1em} \\
+            \underline{\textbf{Cas  $c | b $}} \vspace{1em} \\ 
+            Sans perte de généralité, on peut montrer avec un raisonnement similaire au  
+            premier cas que $c | ab$ lorsque $c|b$. 
+            \vspace{1em} \\ 
+            Dans les deux cas, $c|ab$, et nous avons montré que si $c|a$ ou $c|b$, alors 
+            $c$ divise nécessairement $ab$ Nous concluons alors que le Lemme 6 est vrai. \qed
+            
+            \paragraph{}
+            Un \textbf{corollaire} du \textbf{\textcolor{brown}{Lemme 6}} est que si $2$ divise 
+            une des expressions $a = {i \choose j - r}$ ou $b = {2^k \choose j}$ de 
+            la sommation $\sum_{r=0}^{j} {i \choose j - r} {2^k \choose j}$ pour 
+            toutes les valeurs possible de $r$, 
+            alors $2$ divise le produit $ab$ de cette sommation. 
+            \vspace{1em} \\ 
+            \underline{\textbf{Investigation de $\sum_{r=0}^{j} {i \choose j - r} {2^k \choose j}$}}
+            \vspace{1em} \\ 
+            Pour toutes les valeurs de $r$, sauf $r = 0$, le coefficient binomial ${2^k \choose r}$ 
+            sera un multiple de $2$. Par conséquent le coefficient
+            ${2^k \choose j}$ sera divisible par $2$ et, 
+            par le \textbf{\textcolor{brown}{Lemme 6}} le produit, ${i \choose j -r}{2^k \choose j}$
+            sera divisible par $2$. Donc, pour tous les termes $r > 0$ de la sommation, 
+            leur contribution au modulo $2$ sera nulle 
+
+
+            Lorsque $r = 0$ on a alors ${2^k \choose 0}$ et ce nombre est toujours un, peu importe la 
+            valeur de $k$. L'expression de sommation devient alors 
+
+       \begin{align}
+              \sum_{r=0}^{\textcolor{myb}{r=0}} {i \choose j - \textcolor{myb}{0}} {2^k \choose \textcolor{myb}{0}} = 
+              {i \choose j} \times 1  = {i \choose j}
+       \end{align}
+
+            Nous venons de montrer que lorsque $r = 0$, nous avons la sommation :  
+              \begin{align*}
+                  \left( \sum_{r=0}^{r=0} {i \choose j-r} {2^k \choose r} \right) \text{ mod 2}
+                  = {i \choose j} \text{ mod 2}
+            \end{align*}  
+
+            Nous venons de montrer que pour toutes autres valeurs de $r$, 
+            nous avons la sommation:  
+              \begin{align*}
+                  \left( \sum_{r=1}^{j} {i \choose j-r} {2^k \choose r} \right) \text{ mod 2}
+                  = 0  
+            \end{align*}  
+            \vspace{1em} \\ 
+            \textbf{Or},   
+              \begin{align*}
+                  \textcolor{myp}{\left( \sum_{r=0}^{j} {i \choose j-r} {2^k \choose r} \right)} \text{ mod 2}
+         = &\sum_{r=0}^{\textcolor{myb}{r=0}} {i \choose j - \textcolor{myb}{0}} {2^k \choose \textcolor{myb}{0}} 
+         \text{ mod 2} \\ + \\ 
+           &\sum_{r=1}^{j} {i \choose j-r} {2^k \choose r} \text{ mod 2 } \\ \\ 
+         = &{i \choose j}\text{ mod 2} + 0\\   \\ 
+         = &{i \choose j} \text{mod 2} \\ 
+         \textbf{Par définition}\text{,} = &\textcolor{red}{P(i, j)}
+            \end{align*} 
+        Ainsi, la proposition (1.9) est vraie ; $P(i,j) = P(2^k +i, j) = {i \choose j} \text{ mod 2}$. \qed
+        \end{Preuve*}
+        \columnbreak
+        Nous continuous la preuve en montrant que la seconde proposition est également vraie. 
+        Considérez la proposition suivante 
+        \begin{prop}{($Q$)}{}
+            \[ P(i, j) = P(2^k +i, 2^k + j) \]
+        \end{prop}
+        \begin{Preuve*}{}{}
+            Nous devons montrer que l'égalité donnée par $Q$ tient. Nous allons procéder 
+            par \textcolor{red}{\textit{preuve directe}}. 
+            \vspace{1em} \\ 
+            Supposons que l'égalité de la proposition (1.10) est vraie. 
+            Le terme de droite de $Q$ peut être réécrit comme suit, en utilisant 
+            la version adapté de l'identité (équation 1.13) : 
+            \begin{align*}
+                P(2^k + i, 2^k + j)    &= P(i + 2^k, j + 2^k) 
+                                \quad\quad\text{ Inversion de l'ordre } 
+                                \\
+                                &={i + 2^k \choose j + 2^k} \text{ mod } 2 \text{\;\quad\quad\quad\quad\; 
+                Def.  de P(i, j)} 
+                \\ 
+                              &= \textcolor{myp}{\left( \sum_{r=0}^{j+2^k} 
+                              {i \choose (j + 2^k)-r} {2^k \choose r} \right)}
+                              \text{ mod } 2
+            \end{align*} 
+            \underline{\textbf{Investigation de $\sum_{r=0}^{j+2^k} {i \choose j + 2^k- r} {2^k \choose j}$}}
+            \vspace{1em} \\ 
+        Pour toutes les valeurs de $r$ y compris 
+        $r = j$, et sauf $r= 2^k$, le coefficient binomial ${2^k \choose r}$ sera divisible 
+        par $2$ et donc les $r \neq 2^k$ derniers termes de la sommation auront une contribution 
+        nulle au modulo $2$. 
+
+        Lorsque $r = 2^k$, on a alors ${2^k \choose 2^k}$ pour l'une des experession de la sommation 
+        et nous pouvons la simplifier comme suit :
+       \begin{align}
+              \sum_{r=0}^{\textcolor{myb}{r=2^k}} {i \choose j + 2^k - \textcolor{myb}{2^k}} {2^k \choose \textcolor{myb}
+              {2^k}} = 
+              {i \choose j} \times 1  = {i \choose j}
+       \end{align}
+            \textbf{Or},
+              \begin{align*}
+               \scalemath{0.8}{
+                  \textcolor{myp}{\left( \sum_{r=0}^{j + 2^k} {i \choose j + 2^k-r} 
+              {2^k \choose r} \right)} \text{ mod 2}}
+         = &\sum_{r=0}^{\textcolor{myb}{r=j-1}} {i \choose j + 2^k- \textcolor{myb}{r}} {2^k \choose \textcolor{myb}{r}} 
+         \text{ mod 2} \\ + \\
+           &{i \choose j + 2^k - \textcolor{myb}{j}}{2^k \choose j} \text{ mod 2}\\ + \\ 
+           &\sum_{r=j+1}^{\textcolor{myb}{2^k -1}} {i \choose j-r} {2^k \choose r} \text{ mod 2 } \\ + \\ 
+           &{i \choose j + 2^k - \textcolor{myb}{2^k}}{2^k \choose 2^k}\text{ mod 2}\\ \\
+         = &0 + 0 + 0 + {i \choose j}\text{ mod 2}\\   \\ 
+         = &{i \choose j} \text{mod 2} \\ 
+     \textbf{Par définition}\text{,} = &\textcolor{red}{P(i, j)} 
+            \end{align*} 
+        Ainsi, la porposition (1.10) est vraie; $P(i, j) = P(2^k +i, 2^k +j) = {i \choose j} \text{mod 2}$ 
+        \end{Preuve*}
+
+        En conclusion, les proposition $1.9$ et $1.10$ sont toutes deux vrais. Par conséquent, 
+        nous pouvons affirmer que l'identité est bien valide :
+            \[ P(i, j) = \sum_{r=0}^{j} {i \choose j-r} {2^k \choose r} \text{ mod } 2   \]
+            \qed
+        \begin{enumerate}
+            \item Utilisez ce résultat pour expliquer la similarité observée entre le triangle de Sierpiński
+                et le \textit{triangle de Pascal modulo 2}.
+        \end{enumerate}
+
+        \begin{Concept*}{}{}
+            Dans le triangle de Pascal, chaque nombre est le résultat de la somme de deux nombres 
+            situés exactement au-dessus (\textit{Figure 1.1}). Lorsqu'on calcule les coefficients 
+            binomiaux du triangle de Pascal modulo 2, on obtient des valeurs de $0$ ou $1$, puisque chaque 
+            nombre découlant d'un coefficient est soit pair ou impair, et donc chaque nombre 
+            découlant d'un coefficient est divisible par $2$ ou engendre un reste de $1$ lorsqu'on le divise 
+            par deux. 
+        \end{Concept*}
+        La preuve que nous venons de compléter a montré que pour tout naturel $i$, $2^k$, et $j$, le 
+        coefficient binomial ${i  + 2^k \choose j} \text{ mod 2}$ a les mêmes propriétés de divisibilité 
+        que ${ i \choose j} \text{ mod 2}$. Autrement dit, 
+        
+        \begin{itemize}
+            \item \textbf{Égalité 1} Proposition (1.9) \\ Chaque nombre à la ligne $i$ et la colonne $j$ 
+        du \textit{triangle de Pascal modulo 2} a une valeur équivalente au nombre présent à la ligne
+            $i + 2^k$  et le colonne $j$.
+            \item \textbf{Égalité 2} Proposition (1.10) \\  Chaque nombre à la ligne $i$ et la colonne $j$ 
+        du \textit{triangle de Pascal modulo 2} a une valeur équivalente au nombre présent à la ligne
+            $i + 2^k$ et la colonne $j + 2^k$
+        \end{itemize} 
+        Dans le \textit{triangle de Pascal modulo 2},  on peut conceptualiser chaque entrée \textbf{\texttt{1}} 
+        comme étant un \textbf{triangle plein} et chaque entrée \textbf{\texttt{0}} 
+        comme étant un triangle vide formant un approximation de Sierpinski.  
+        Par ailleurs, si une ligne $i$ est elle que $2|i + 1$  il existe un \textit{triangle complètement simétrique} 
+        de heuteur $i + 1$ composés de triangle pleins et de triangle vides.
+
+        Par exemple, la \textbf{ligne 3} est du \textit{triangle de Pascal modulo 2} est telle que 
+        $2 | 3 + 1$. Et si on plaçait lest triangle de façon à former un 
+        \textit{triangle complètement simétrique}, on obtiendrait un triangle de hauteur $4$, 
+        une approximation du triangle de Sirpinski :
+
+        \begin{figure}[H]
+            \includegraphics[width=0.3\textwidth]{PascalModulo2.jpg}
+            \caption{Approximation de Sierpinski à partir de Pascal modulo 2}
+        \end{figure}
+        
+
+
+
+        Cette propriété reflète la répétition et l'auto-similarité dans le triangle de Pascal modulo 2, 
+        qui sont des caractéristiques clés du triangle de Sierpiński.
+
+        On peut conceptualiser le triangle de Sierpinski comme étant un triangle récursif composé de triangles 
+        pleins et de triangle vide. Par ailleurs, en commeçant par la ligne 0, 
+        si une ligne $i$ est telle que $2|i + 1$  il existe un \textit{triangle complètement simétrique} 
+        de heuteur $i + 1$ composés de triangle pleins et de triangle vides. L'identité que nous avons 
+        prouvé suggère que chaque triangle à une position $(i,j)$ aura la même propriété 
+        (plein ou vide) qu'un triangle situé à la position $(i + 2^k, j)$, où $i$ et $j$ représentent les 
+        lignes et les colonnes du triangle de Sierpinski, respectivement. 
+        De plus, par l'égalité de la proposition ($1.10$) 
+        que nous avons prouvé, un triangle situé à la position $(i, j)$ aura la même propriété qu'un triangle 
+        situé à la position $(i + 2^k, j + 2^k)$. 
+
+\section*{Problème 4 $\quad$ $\cdot$  $\quad$ Expressions Logiques}
+        \begin{enumerate}
+            \item 
+            \begin{itemize}
+                \item \textbf{Cas de base:} $\forall x \in P, x \in F$
+                
+                \item \textbf{Constructeur:} Soit $A, B \in F$ \\
+                $(A) \in F$ \\
+                $\lnot A \in F$ \\
+                $A \lor B \in F$ \\
+                $A \land B \in F$
+            \end{itemize}
+
+            \item \textbf{Fonction de vérification:}
+
+            \textbf{Vérification (A):}
+            \begin{align*}
+                &\text{Si } A \text{ appartient à } P \\
+                &\quad \text{retourner vrai} \\
+                &\text{Si } A \text{ est (expression)} \\
+                &\quad \text{retourner } \text{Vérification}(\text{expression}) \\
+                &\text{Si } A \text{ est non expression} \\
+                &\quad \text{retourner } \text{Vérification}(\text{expression}) \\
+                &\text{Si } A \text{ est expression1 et logique expression2} \\
+                &\quad \text{retourner } \text{Vérification}(\text{expression1}) \\ & \quad \text{ et } 
+                \text{Vérification}(\text{expression2}) \\
+                &\text{Si } A \text{ est expression1 ou logique expression2} \\
+                &\quad \text{retourner } \text{Vérification}(\text{expression1})  \\ & \quad \text{ et } 
+                \text{Vérification}(\text{expression2}) \\
+            \end{align*}
+            \item
+           $\forall$ \(A \in F\), \(\implies\text{Vérification}(A)\) \\ retourne vrai.
+        \subsection*{Cas de base:}
+        Si $A$ est tel que $A = (p)$ ou $p$ appartient à $P$, Vérification(A) retourne vrai
+
+        \subsection*{Étape inductive:}
+            Supposons que l'algorithme fonctionne correctement pour une expression de taille inférieure à \(n\). Montrons qu'il fonctionne correctement pour une expression de taille \(n\). Considérons l'expression \(A\) telle que \(|A| = n\) et examinons tous les cas possibles:
+
+            \begin{itemize}
+                \item Si \(A\) est une expression entre parenthèses \((\text{expression})\), l'algorithme vérifie récursivement l'expression à l'intérieur des parenthèses. Par l'hypothèse d'induction, si l'expression à l'intérieur des parenthèses est correcte, alors l'algorithme renverra également vrai pour \(A\).
+                \item Si \(A\) est une négation \((\lnot\text{expression})\), l'algorithme vérifie récursivement l'expression après la négation. Encore une fois, par l'hypothèse d'induction, si l'expression après la négation est correcte, alors l'algorithme renverra vrai pour \(A\).
+                \item Si \(A\) est une conjonction \((\text{expression1}\land\text{expression2})\) ou une disjonction \((\text{expression1}\lor\text{expression2})\), l'algorithme vérifie les deux parties de la conjonction ou de la disjonction. Par l'hypothèse d'induction, si les deux parties sont correctes, alors l'algorithme renverra vrai pour \(A\).
+            \end{itemize}
+
+            Ainsi, à chaque cas, l'algorithme renvoie la réponse correcte, donc \(\text{Vérification}(A)\) est valable pour toutes les expressions logiques de \(F\).
+
+            \item
+        \subsection*{Cas de base:}
+
+        $\forall x \in P, x \in F$ est l'expressions la plus simple de F ne contenant pas de parenthèses donc pour ces expressions le nombre de parenthèses ouvrante et fermante est le même soit zéro.
+
+        \subsection*{Étape inductive:}
+
+        Supposons $A, B \in  F$ des expression qui possèdent autant de parenthèses ouvrantes que fermante, disons de complexité inferieure à n. \\
+        \begin{itemize}
+
+        \item Lorsqu'on forme une expression à partir de deux expression A et B soit une expression de complexité égale à n à l'aide d'un operateur logique $\lor$ et $\land$ elles conservent individuellement le même nombre de parenthèses. \\ 
+
+        \item Si on place l'expression logique entre parenthèses, elles font toujours partie de F et possède le meme nombre de parenthèse ouvrante que fermante. \\
+
+        \item Si on fait la negation d'une expression logique $\lnot A$, elle possède toujours le meme nombre de parenthèses soit celui de A. \\
+        \end{itemize}
+
+        Ainsi, chaque opération qui construit une nouvelle expression à partir d'expressions plus petites préserve la propriété des parenthèses équilibrées.
+        \end{enumerate}
+
+        \begin{figure}[H]
+            \begin{center}
+                \includegraphics[width=0.45\textwidth]{Kirby.png}
+            \end{center}
+        \end{figure}
+        
+        \end{multicols*}  
+
+
+\end{document}  
